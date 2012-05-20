@@ -1,0 +1,23 @@
+﻿using AKBMatome.Data;
+
+namespace AKBMatome.SampleData
+{
+    public class ChannelDetailPageSampleData
+    {
+        private FeedChannel _TheFeedChannel = new FeedChannel
+        {
+            Id = 1,
+            FeedGroupId = 1,
+            FeedLink = "http://twitter.com/yamac_support",
+            Link = "http://twitter.com/yamac_support",
+            AuthorName = "AuthorName AuthorName AuthorName AuthorName AuthorName",
+            Title = "Title Title Title Title Title Title Title Title Title Title",
+            Priority = 100,
+            AccentColor = int.Parse("FFF09609", System.Globalization.NumberStyles.HexNumber),
+        };
+        public FeedChannel TheFeedChannel
+        {
+            get { return _TheFeedChannel; }
+        }
+    }
+}

@@ -1,0 +1,20 @@
+Desc1     : All about the AKB48!
+Desc2     :
+Do you want to get all about the AKB48? Read tons of blog articles for member of AKB48 by using this application.
+
+Configure your 'oshimems' to read articles for your prefered members and others separately. You can also choose a color for each member to indicates whose article.
+
+Enabling push notification, you can receive oshimem's updates.
+
+*MEMBER NAME AND BLOG ARTICLE IS DISPLAYED IN JAPANESE.
+*PUSH NOTIFICATION FUNCTIONALITY IS BETA VERSION. IT MAY NOT WORK CORRECTLY.
+
+Versions
+1.5.0.0: Added push notification functionality.
+1.4.0.0: Added an English language support. Improved application stability.
+1.3.0.0: More old articles could be read. Improved application speed.
+1.2.0.0: Fix issue that application requires unnecessary feature 'location service'.
+1.1.0.0: Improved networking and application speed. New design. Improved browser feature.
+1.0.0.0: First release.
+
+Keywords  : akb48;akb;48;blog;news
