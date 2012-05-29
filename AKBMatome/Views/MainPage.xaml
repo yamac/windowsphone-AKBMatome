@@ -223,7 +223,7 @@
 
                                                                 <!-- アイテム日時 -->
                                                                 <TextBlock
-                                                                    Width="127"
+                                                                    Width="117"
                                                                     FontSize="13"
                                                                     TextAlignment="Right"
                                                                     VerticalAlignment="Bottom"
@@ -298,7 +298,7 @@
 
                                                                 <!-- アイテム日時 -->
                                                                 <TextBlock
-                                                                    Width="127"
+                                                                    Width="117"
                                                                     FontSize="13"
                                                                     TextAlignment="Right"
                                                                     VerticalAlignment="Bottom"
