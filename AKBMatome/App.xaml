@@ -6,8 +6,10 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:helpers="clr-namespace:Helpers"
+    xmlns:converters="clr-namespace:AKBMatome.Converters"
     xmlns:locators="clr-namespace:AKBMatome.Locators"
     xmlns:localControls="clr-namespace:AKBMatome.LocalControls"
+    xmlns:data="clr-namespace:AKBMatome.Data"
     >
 
     <!--アプリケーション リソース-->
@@ -18,6 +20,20 @@
             xmlns:local ="clr-namespace:AKBMatome.Localization"
             x:Key="LocalizedResources"
             />
+
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converters:BooleanToInverseVisibilityConverter x:Key="BooleanToInverseVisibilityConverter"/>
+        <converters:VisibilityToBooleanConverter x:Key="VisibilityToBooleanConverter"/>
+        <converters:InverseVisibilityToBooleanConverter x:Key="InverseVisibilityToBooleanConverter"/>
+        <converters:ColorCodeToSolidColorBrushConverter x:Key="ColorCodeToSolidColorBrushConverter"/>
+        <converters:DateTimeToTimelineFormatStringConverter x:Key="DateTimeToTimelineFormatStringConverter"/>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <converters:ToggleSwitchContentConverter x:Key="ToggleSwitchContentConverter"/>
+        <converters:PriorityToBooleanConverter x:Key="PriorityToBooleanConverter"/>
+        <converters:PriorityBooleanToOpacityConverter x:Key="PriorityBooleanToOpacityConverter"/>
+        <converters:PriorityToOpacityConverter x:Key="PriorityToOpacityConverter"/>
+        <data:PredefinedColors x:Key="PredefinedColors"/>
+        <helpers:AppAttributes x:Key="AppAttributes"/>
 
         <helpers:ObjectCollection x:Key="AccentColors">
             <sys:String>FFD80073</sys:String>

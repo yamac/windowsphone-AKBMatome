@@ -231,12 +231,6 @@ namespace AKBMatome.ViewModels
                             {
                                 HasMember = true;
                                 service.GetFeedItems(dataContext, null, channelIds, page, LoadFeedItemsCompleted);
-                                string uuid = Helpers.AppSettings.GetValueOrDefault<string>(Constants.AppKey.NotificationUuid, null);
-                                if (uuid != null)
-                                {
-                                    CultureInfo uicc = Thread.CurrentThread.CurrentUICulture;
-                                    service.UpdateNotificationChannel(uuid, uicc.Name, channelIds, true, UpdateNotificationChannelCompleted);
-                                }
                             }
                         }
                         break;
@@ -282,10 +276,6 @@ namespace AKBMatome.ViewModels
                 FeedItems.Add(item);
             }
             HasNextPage = result.HasNext;
-        }
-
-        protected void UpdateNotificationChannelCompleted(AKBMatomeService.UpdateNotificationChannelResult result, Exception error)
-        {
         }
 
         #endregion

@@ -12,8 +12,8 @@ namespace AKBMatome.Services
         void GetFeedItems(FeedDataContext dataContext, int[] groupIds, int[] channelIds, int page, Action<AKBMatomeService.GetFeedItemsResult, Exception> callback);
     
         // Notification
-        void RegisterNotificationChannel(Action<AKBMatomeService.RegisterNotificationChannelResult, Exception> callback);
+        void RegisterNotificationChannel(string version, string langCode, Action<AKBMatomeService.RegisterNotificationChannelResult, Exception> callback);
         void UnregisterNotificationChannel(string uuid, Action<AKBMatomeService.UnregisterNotificationChannelResult, Exception> callback);
-        void UpdateNotificationChannel(string uuid, string langCode, int[] channelIds, bool resetUnreads, Action<AKBMatomeService.UpdateNotificationChannelResult, Exception> callback);
+        void UpdateNotificationChannel(string uuid, string version, string langCode, int[] channelIds, bool resetUnreads, Action<AKBMatomeService.UpdateNotificationChannelResult, Exception> callback);
     }
 }

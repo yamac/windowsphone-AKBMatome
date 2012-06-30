@@ -14,8 +14,7 @@
     xmlns:helpers="clr-namespace:Helpers"
     xmlns:sampleData="clr-namespace:AKBMatome.SampleData"
     xmlns:converters="clr-namespace:AKBMatome.Converters"
-    xmlns:data="clr-namespace:AKBMatome.Data"
-    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="800"
+    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="728"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
@@ -29,9 +28,6 @@
     <!-- リソース -->
     <phone:PhoneApplicationPage.Resources>
         <sampleData:ChannelDetailPageSampleData x:Key="SampleData"/>
-        <converters:PriorityToBooleanConverter x:Key="PriorityToBooleanConverter"/>
-        <converters:PriorityBooleanToOpacityConverter x:Key="PriorityBooleanToOpacityConverter"/>
-        <data:PredefinedColors x:Key="PredefinedColors"/>
     </phone:PhoneApplicationPage.Resources>
 
     <!-- ページ切り替え効果 -->

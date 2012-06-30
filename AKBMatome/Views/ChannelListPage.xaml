@@ -28,8 +28,6 @@
     <!-- リソース -->
     <phone:PhoneApplicationPage.Resources>
         <sampleData:ChannelListPageSampleData x:Key="SampleData"/>
-        <converters:PriorityToOpacityConverter x:Key="PriorityToOpacityConverter"/>
-        <converters:ColorCodeToSolidColorBrushConverter x:Key="ColorCodeToSolidColorBrushConverter"/>
     </phone:PhoneApplicationPage.Resources>
 
     <!-- ページ切り替え効果 -->

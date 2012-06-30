@@ -136,7 +136,7 @@
     <value>refresh</value>
   </data>
   <data name="WebPage_AppBar_MenuItemText_ShareThePage" xml:space="preserve">
-    <value>share the page</value>
+    <value>share page</value>
   </data>
   <data name="MainPage_PivotTitle" xml:space="preserve">
     <value>AKB NEWS</value>
@@ -216,7 +216,7 @@ The word 'oshimem' means your prefered member!</value>
     <value>teal</value>
   </data>
   <data name="PreferencesPage_ApplicationDetailsAndReviews" xml:space="preserve">
-    <value>Details and reviews for the app</value>
+    <value>Details and reviews for app</value>
   </data>
   <data name="PreferencesPage_ApplicationTitle" xml:space="preserve">
     <value>AKB NEWS</value>
@@ -231,7 +231,7 @@ The word 'oshimem' means your prefered member!</value>
     <value>SETTINGS</value>
   </data>
   <data name="PreferencesPage_PivotItem_AboutTheApplication" xml:space="preserve">
-    <value>about the app</value>
+    <value>about app</value>
   </data>
   <data name="PreferencesPage_TwitterAccountForSupportValue" xml:space="preserve">
     <value>@yamac_support</value>
@@ -273,6 +273,9 @@ The word 'oshimem' means your prefered member!</value>
     <value>Enabling push notification, you can receive tile and toast notification for oshimem's updates. You can turn this functionality off anytime. Do you want to enable this functionality?</value>
   </data>
   <data name="PreferencesPage_Error_NotificationRegistrationFailed" xml:space="preserve">
-    <value>Registration failed. Please retry later.</value>
+    <value>Registration failed. Check your network connection.</value>
+  </data>
+  <data name="PreferencesPage_Busy" xml:space="preserve">
+    <value>Just a moment...</value>
   </data>
 </root>

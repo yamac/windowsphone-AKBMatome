@@ -8,6 +8,9 @@ using Microsoft.Phone.Controls;
 using SimpleMvvmToolkit;
 using Microsoft.Phone.Shell;
 using System.Linq;
+using System.Globalization;
+using System.Threading;
+using System.Windows.Media;
 
 namespace AKBMatome.ViewModels
 {
@@ -24,6 +27,7 @@ namespace AKBMatome.ViewModels
         {
             RegisterToReceiveMessages(Constants.MessageTokens.InitializeCompleted, OnInitializeCompleted);
             RegisterToReceiveMessages(Constants.MessageTokens.FeedChannelsUpdated, OnFeedChannelsUpdated);
+            RegisterToReceiveMessages(Constants.MessageTokens.NotificationUpdated, OnNotificationUpdated);
             this.app = app;
             this.navigator = navigator;
             this.service = service;
@@ -53,6 +57,21 @@ namespace AKBMatome.ViewModels
 
         private void OnInitializeCompleted(object sender, NotificationEventArgs e)
         {
+            /*
+            System.Diagnostics.Debug.WriteLine(
+                int.Parse(
+                    "FF15181d",
+                    System.Globalization.NumberStyles.HexNumber
+                )
+            );
+            */
+            string uuid = Helpers.AppSettings.GetValueOrDefault<string>(Constants.AppKey.NotificationUuid, null);
+            if (uuid != null)
+            {
+                CultureInfo uicc = Thread.CurrentThread.CurrentUICulture;
+                service.UpdateNotificationChannel(uuid, Helpers.AppAttributes.Version, uicc.Name, null, true, UpdateNotificationChannelCompleted);
+            }
+
             ObservableCollection<MainPagePivotItemViewModel> items = new ObservableCollection<MainPagePivotItemViewModel>();
             MainPagePivotItemViewModel vm;
             vm = new MainPagePivotItemViewModel(app, navigator, service, dataContext, MainPagePivotItemViewModel.PivotItemType.OshiMem);
@@ -79,7 +98,19 @@ namespace AKBMatome.ViewModels
 
         private void OnFeedChannelsUpdated(object sender, NotificationEventArgs e)
         {
-            PivotItems[PivotItemSelectedIndex].LoadFeedItems(true, false);
+            PivotItems[0].LoadFeedItems(true, false);
+            PivotItems[1].LoadFeedItems(true, false);
+        }
+
+        private void OnNotificationUpdated(object sender, NotificationEventArgs e)
+        {
+            int[] channelIds = (from channel in dataContext.FeedChannels where channel.Priority == 100 select channel.Id).ToArray();
+            string uuid = Helpers.AppSettings.GetValueOrDefault<string>(Constants.AppKey.NotificationUuid, null);
+            if (uuid != null)
+            {
+                CultureInfo uicc = Thread.CurrentThread.CurrentUICulture;
+                service.UpdateNotificationChannel(uuid, Helpers.AppAttributes.Version, uicc.Name, channelIds, true, UpdateNotificationChannelCompleted);
+            }
         }
 
         #endregion
@@ -231,6 +262,10 @@ namespace AKBMatome.ViewModels
         /************************
          * Completion Callbacks *
          ************************/
+
+        void UpdateNotificationChannelCompleted(AKBMatomeService.UpdateNotificationChannelResult result, Exception error)
+        {
+        }
 
         private void GetAllFeedGroupsAndChannelsCompleted(Exception error)
         {

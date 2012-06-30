@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Threading;
+using System.Windows;
 using System.Windows.Input;
+using Coding4Fun.Phone.Controls;
 using AKBMatome.Data;
-using AKBMatome.Navigation;
 using AKBMatome.Services;
 using Microsoft.Phone.Controls;
-using SimpleMvvmToolkit;
 using Microsoft.Phone.Tasks;
-using System.Windows;
+using SimpleMvvmToolkit;
 
 namespace AKBMatome.ViewModels
 {
@@ -111,7 +112,7 @@ namespace AKBMatome.ViewModels
                 return new DelegateCommand(() =>
                 {
                     MarketplaceDetailTask task = new MarketplaceDetailTask();
-                    task.ContentIdentifier = "ded3fbbb-df8e-4672-bd26-42a9b7d50115";
+                    task.ContentIdentifier = null;
                     task.ContentType = MarketplaceContentType.Applications;
                     task.Show();
                 }
@@ -133,9 +134,9 @@ namespace AKBMatome.ViewModels
                     {
                         var result =
                             MessageBox.Show(
-                            Localization.AppResources.PreferencesPage_Notification_ReceiveNotification_ConfirmationText,
-                            Localization.AppResources.PreferencesPage_Notification_ReceiveNotification_ConfirmationCaption,
-                            MessageBoxButton.OKCancel
+                                Localization.AppResources.PreferencesPage_Notification_ReceiveNotification_ConfirmationText,
+                                Localization.AppResources.PreferencesPage_Notification_ReceiveNotification_ConfirmationCaption,
+                                MessageBoxButton.OKCancel
                             );
                         if (result.Equals(MessageBoxResult.OK))
                         {
@@ -177,7 +178,8 @@ namespace AKBMatome.ViewModels
         public void RegisterNotificationChannel()
         {
             IsBusy = true;
-            service.RegisterNotificationChannel(RegisterNotificationChannelCompleted);
+            CultureInfo uicc = Thread.CurrentThread.CurrentUICulture;
+            service.RegisterNotificationChannel(Helpers.AppAttributes.Version, uicc.Name, RegisterNotificationChannelCompleted);
         }
 
         public void UnregisterNotificationChannel()
@@ -218,6 +220,7 @@ namespace AKBMatome.ViewModels
             {
                 Helpers.AppSettings.AddOrUpdateValue(Constants.AppKey.NotificationUuid, result.Response.Uuid);
             }
+            SendMessage(Constants.MessageTokens.NotificationUpdated, new NotificationEventArgs());
         }
 
         private void UnregisterNotificationChannelCompleted(AKBMatomeService.UnregisterNotificationChannelResult result, Exception error)

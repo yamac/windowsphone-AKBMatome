@@ -29,10 +29,6 @@
     <!-- リソース -->
     <phone:PhoneApplicationPage.Resources>
         <sampleData:MainPageSampleData x:Key="SampleData"/>
-        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <converters:BooleanToInverseVisibilityConverter x:Key="BooleanToInverseVisibilityConverter"/>
-        <converters:ColorCodeToSolidColorBrushConverter x:Key="ColorCodeToSolidColorBrushConverter"/>
-        <converters:DateTimeToTimelineFormatStringConverter x:Key="DateTimeToTimelineFormatStringConverter"/>
     </phone:PhoneApplicationPage.Resources>
 
     <!-- ページ切り替え効果 -->

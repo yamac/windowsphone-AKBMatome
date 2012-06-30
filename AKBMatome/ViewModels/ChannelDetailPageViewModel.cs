@@ -176,12 +176,14 @@ namespace AKBMatome.ViewModels
         {
             dataContext.SubmitChanges();
             SendMessage(Constants.MessageTokens.FeedChannelsUpdated, new NotificationEventArgs());
+            SendMessage(Constants.MessageTokens.NotificationUpdated, new NotificationEventArgs());
         }
 
         private void RejectChanges()
         {
             dataContext.Refresh(System.Data.Linq.RefreshMode.OverwriteCurrentValues, TheFeedChannel);
             SendMessage(Constants.MessageTokens.FeedChannelsUpdated, new NotificationEventArgs());
+            SendMessage(Constants.MessageTokens.NotificationUpdated, new NotificationEventArgs());
         }
 
         #endregion

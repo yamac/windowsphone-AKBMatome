@@ -10,7 +10,11 @@ namespace AKBMatome
     {
         public static class App
         {
+#if DEBUG
+            public const int FeedChannelExpireDays = 0;
+#else
             public const int FeedChannelExpireDays = 7;
+#endif
             public const int ItemsPerPage = 10;
             public const int BasePage = 1;
             public const int MaxPage = 30;
@@ -27,6 +31,7 @@ namespace AKBMatome
         {
             public const string InitializeCompleted = "InitializeCompletedToken";
             public const string FeedChannelsUpdated = "FeedChannelsUpdated";
+            public const string NotificationUpdated = "NotificationUpdated";
         }
 
         public static class Net
