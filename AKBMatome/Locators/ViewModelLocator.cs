@@ -8,6 +8,14 @@ namespace AKBMatome.Locators
 {
     public class ViewModelLocator
     {
+        private PhoneApplicationFrame TheApp
+        {
+            get
+            {
+                return App.Current.RootVisual as PhoneApplicationFrame;
+            }
+        }
+
         private INavigator _TheNavigator;
         private INavigator TheNavigator
         {
@@ -51,11 +59,7 @@ namespace AKBMatome.Locators
         {
             get
             {
-                PhoneApplicationFrame app = App.Current.RootVisual as PhoneApplicationFrame;
-                INavigator navigator = TheNavigator;
-                IAKBMatomeService service = TheAKBMatomeService;
-                FeedDataContext dataContext = TheFeedDataContext;
-                return new MainPageViewModel(app, navigator, service, dataContext);
+                return new MainPageViewModel(TheApp, TheNavigator, TheAKBMatomeService, TheFeedDataContext);
             }
         }
 
@@ -67,13 +71,27 @@ namespace AKBMatome.Locators
             }
         }
 
+        public GroupListPageViewModel GroupListPageViewModel
+        {
+            get
+            {
+                return new GroupListPageViewModel(TheApp, TheNavigator, TheAKBMatomeService, TheFeedDataContext);
+            }
+        }
+
+        public GroupDetailPageViewModel GroupDetailPageViewModel
+        {
+            get
+            {
+                return new GroupDetailPageViewModel(TheNavigator, TheFeedDataContext);
+            }
+        }
+
         public ChannelListPageViewModel ChannelListPageViewModel
         {
             get
             {
-                INavigator navigator = TheNavigator;
-                FeedDataContext dataContext = TheFeedDataContext;
-                return new ChannelListPageViewModel(navigator, dataContext);
+                return new ChannelListPageViewModel(TheApp, TheNavigator, TheAKBMatomeService, TheFeedDataContext);
             }
         }
 
@@ -81,9 +99,7 @@ namespace AKBMatome.Locators
         {
             get
             {
-                INavigator navigator = TheNavigator;
-                FeedDataContext dataContext = TheFeedDataContext;
-                return new ChannelDetailPageViewModel(navigator, dataContext);
+                return new ChannelDetailPageViewModel(TheNavigator, TheFeedDataContext);
             }
         }
 
@@ -91,11 +107,7 @@ namespace AKBMatome.Locators
         {
             get
             {
-                PhoneApplicationFrame app = App.Current.RootVisual as PhoneApplicationFrame;
-                INavigator navigator = TheNavigator;
-                IAKBMatomeService service = TheAKBMatomeService;
-                FeedDataContext dataContext = TheFeedDataContext;
-                return new PreferencesPageViewModel(app, navigator, service, dataContext);
+                return new PreferencesPageViewModel(TheApp, TheNavigator, TheAKBMatomeService, TheFeedDataContext);
             }
         }
     }
