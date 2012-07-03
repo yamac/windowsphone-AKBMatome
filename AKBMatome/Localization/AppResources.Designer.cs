@@ -286,11 +286,65 @@ namespace AKBMatome.Localization {
         }
         
         /// <summary>
+        ///   GROUP INFORMATION に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string GroupDetailPage_PageHeaderTitle {
+            get {
+                return ResourceManager.GetString("GroupDetailPage_PageHeaderTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   group settings に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string GroupDetailPage_PageTitle {
+            get {
+                return ResourceManager.GetString("GroupDetailPage_PageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Subscribe に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string GroupDetailPage_SubscribeToggleSwitchHeader {
+            get {
+                return ResourceManager.GetString("GroupDetailPage_SubscribeToggleSwitchHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   GROUP INFORMATION に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string GroupListPage_PageHeaderTitle {
+            get {
+                return ResourceManager.GetString("GroupListPage_PageHeaderTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   groups に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string GroupListPage_PageTitle {
+            get {
+                return ResourceManager.GetString("GroupListPage_PageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   settings に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MainPage_AppBar_MenuItemText_AboutTheApplication {
             get {
                 return ResourceManager.GetString("MainPage_AppBar_MenuItemText_AboutTheApplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   group information に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MainPage_AppBar_MenuItemText_GroupInformation {
+            get {
+                return ResourceManager.GetString("MainPage_AppBar_MenuItemText_GroupInformation", resourceCulture);
             }
         }
         
@@ -306,6 +360,15 @@ namespace AKBMatome.Localization {
         /// <summary>
         ///   Can&apos;t retrieve data. に類似しているローカライズされた文字列を検索します。
         /// </summary>
+        public static string MainPage_Error_FailedToGetAllFeedGroups {
+            get {
+                return ResourceManager.GetString("MainPage_Error_FailedToGetAllFeedGroups", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Can&apos;t retrieve data. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
         public static string MainPage_Error_FailedToGetAllFeedGroupsAndChannels {
             get {
                 return ResourceManager.GetString("MainPage_Error_FailedToGetAllFeedGroupsAndChannels", resourceCulture);
@@ -313,40 +376,67 @@ namespace AKBMatome.Localization {
         }
         
         /// <summary>
+        ///   Can&apos;t retrieve data. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MainPage_Error_FailedToGetFeedItems {
+            get {
+                return ResourceManager.GetString("MainPage_Error_FailedToGetFeedItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   web scraps に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MainPage_MatomeChannelsUpdatesList_Title {
+            get {
+                return ResourceManager.GetString("MainPage_MatomeChannelsUpdatesList_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   members に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string MainPage_GeneralMembers {
+        public static string MainPage_MemberChannelsUpdatesList_Title {
             get {
-                return ResourceManager.GetString("MainPage_GeneralMembers", resourceCulture);
+                return ResourceManager.GetString("MainPage_MemberChannelsUpdatesList_Title", resourceCulture);
             }
         }
         
         /// <summary>
         ///   oshimems に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string MainPage_Oshimems {
+        public static string MainPage_OshimemChannelsUpdatesList_Title {
             get {
-                return ResourceManager.GetString("MainPage_Oshimems", resourceCulture);
+                return ResourceManager.GetString("MainPage_OshimemChannelsUpdatesList_Title", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   AKB NEWS に類似しているローカライズされた文字列を検索します。
+        ///   48 NEWS に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string MainPage_PivotTitle {
+        public static string MainPage_PageHeaderTitle {
             get {
-                return ResourceManager.GetString("MainPage_PivotTitle", resourceCulture);
+                return ResourceManager.GetString("MainPage_PageHeaderTitle", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Register your oshimems now!
-        ///Open the &apos;member information&apos; menu located at right bottom of the screen to configure your oshimems.
+        ///   Are you a god? に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MainPage_TipsForNoMembers {
+            get {
+                return ResourceManager.GetString("MainPage_TipsForNoMembers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Register your prefered group and oshimems now!
+        ///Open &apos;group information&apos; and &apos;member information&apos; menu located at right bottom of your screen to configure your prefered group and oshimems.
         ///The word &apos;oshimem&apos; means your prefered member! に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string MainPage_TipsForMemberInfoMenu {
+        public static string MainPage_TipsForNoOshimems {
             get {
-                return ResourceManager.GetString("MainPage_TipsForMemberInfoMenu", resourceCulture);
+                return ResourceManager.GetString("MainPage_TipsForNoOshimems", resourceCulture);
             }
         }
         
@@ -378,7 +468,7 @@ namespace AKBMatome.Localization {
         }
         
         /// <summary>
-        ///   AKB NEWS に類似しているローカライズされた文字列を検索します。
+        ///   48 NEWS に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PreferencesPage_ApplicationTitle {
             get {

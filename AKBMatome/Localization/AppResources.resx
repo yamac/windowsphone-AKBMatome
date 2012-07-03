@@ -138,11 +138,8 @@
   <data name="WebPage_AppBar_MenuItemText_ShareThePage" xml:space="preserve">
     <value>share page</value>
   </data>
-  <data name="MainPage_PivotTitle" xml:space="preserve">
-    <value>AKB NEWS</value>
-  </data>
-  <data name="MainPage_GeneralMembers" xml:space="preserve">
-    <value>members</value>
+  <data name="MainPage_PageHeaderTitle" xml:space="preserve">
+    <value>48 NEWS</value>
   </data>
   <data name="Common_Loading" xml:space="preserve">
     <value>Just a moment...</value>
@@ -156,12 +153,9 @@
   <data name="ChannelDetailPage_OfficialBlog" xml:space="preserve">
     <value>Official blog</value>
   </data>
-  <data name="MainPage_Oshimems" xml:space="preserve">
-    <value>oshimems</value>
-  </data>
-  <data name="MainPage_TipsForMemberInfoMenu" xml:space="preserve">
-    <value>Register your oshimems now!
-Open the 'member information' menu located at right bottom of the screen to configure your oshimems.
+  <data name="MainPage_TipsForNoOshimems" xml:space="preserve">
+    <value>Register your prefered group and oshimems now!
+Open 'group information' and 'member information' menu located at right bottom of your screen to configure your prefered group and oshimems.
 The word 'oshimem' means your prefered member!</value>
   </data>
   <data name="PreferencesPage_TwitterAccountForSupport" xml:space="preserve">
@@ -219,7 +213,7 @@ The word 'oshimem' means your prefered member!</value>
     <value>Details and reviews for app</value>
   </data>
   <data name="PreferencesPage_ApplicationTitle" xml:space="preserve">
-    <value>AKB NEWS</value>
+    <value>48 NEWS</value>
   </data>
   <data name="PreferencesPage_ApplicationVersion" xml:space="preserve">
     <value>Version</value>
@@ -277,5 +271,41 @@ The word 'oshimem' means your prefered member!</value>
   </data>
   <data name="PreferencesPage_Busy" xml:space="preserve">
     <value>Just a moment...</value>
+  </data>
+  <data name="MainPage_Error_FailedToGetFeedItems" xml:space="preserve">
+    <value>Can't retrieve data.</value>
+  </data>
+  <data name="MainPage_MatomeChannelsUpdatesList_Title" xml:space="preserve">
+    <value>web scraps</value>
+  </data>
+  <data name="MainPage_MemberChannelsUpdatesList_Title" xml:space="preserve">
+    <value>members</value>
+  </data>
+  <data name="MainPage_OshimemChannelsUpdatesList_Title" xml:space="preserve">
+    <value>oshimems</value>
+  </data>
+  <data name="MainPage_TipsForNoMembers" xml:space="preserve">
+    <value>Are you a god?</value>
+  </data>
+  <data name="MainPage_AppBar_MenuItemText_GroupInformation" xml:space="preserve">
+    <value>group information</value>
+  </data>
+  <data name="GroupDetailPage_PageHeaderTitle" xml:space="preserve">
+    <value>GROUP INFORMATION</value>
+  </data>
+  <data name="GroupDetailPage_PageTitle" xml:space="preserve">
+    <value>group settings</value>
+  </data>
+  <data name="GroupListPage_PageHeaderTitle" xml:space="preserve">
+    <value>GROUP INFORMATION</value>
+  </data>
+  <data name="GroupListPage_PageTitle" xml:space="preserve">
+    <value>groups</value>
+  </data>
+  <data name="MainPage_Error_FailedToGetAllFeedGroups" xml:space="preserve">
+    <value>Can't retrieve data.</value>
+  </data>
+  <data name="GroupDetailPage_SubscribeToggleSwitchHeader" xml:space="preserve">
+    <value>Subscribe</value>
   </data>
 </root>

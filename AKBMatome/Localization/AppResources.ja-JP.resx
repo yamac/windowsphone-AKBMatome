@@ -192,27 +192,57 @@
   <data name="Constants_Media_AccentColors_Teal" xml:space="preserve">
     <value>ティール</value>
   </data>
+  <data name="GroupDetailPage_PageHeaderTitle" xml:space="preserve">
+    <value>グループ情報</value>
+  </data>
+  <data name="GroupDetailPage_PageTitle" xml:space="preserve">
+    <value>グループ設定</value>
+  </data>
+  <data name="GroupDetailPage_SubscribeToggleSwitchHeader" xml:space="preserve">
+    <value>購読</value>
+  </data>
+  <data name="GroupListPage_PageHeaderTitle" xml:space="preserve">
+    <value>グループ情報</value>
+  </data>
+  <data name="GroupListPage_PageTitle" xml:space="preserve">
+    <value>グループ</value>
+  </data>
   <data name="MainPage_AppBar_MenuItemText_AboutTheApplication" xml:space="preserve">
     <value>設定</value>
+  </data>
+  <data name="MainPage_AppBar_MenuItemText_GroupInformation" xml:space="preserve">
+    <value>グループ情報</value>
   </data>
   <data name="MainPage_AppBar_MenuItemText_MemberInformation" xml:space="preserve">
     <value>メンバー情報</value>
   </data>
+  <data name="MainPage_Error_FailedToGetAllFeedGroups" xml:space="preserve">
+    <value>データを取得できませんでした。</value>
+  </data>
   <data name="MainPage_Error_FailedToGetAllFeedGroupsAndChannels" xml:space="preserve">
     <value>データを取得できませんでした。</value>
   </data>
-  <data name="MainPage_GeneralMembers" xml:space="preserve">
+  <data name="MainPage_Error_FailedToGetFeedItems" xml:space="preserve">
+    <value>データを取得できませんでした。</value>
+  </data>
+  <data name="MainPage_MatomeChannelsUpdatesList_Title" xml:space="preserve">
+    <value>まとめ</value>
+  </data>
+  <data name="MainPage_MemberChannelsUpdatesList_Title" xml:space="preserve">
     <value>一般メンバー</value>
   </data>
-  <data name="MainPage_Oshimems" xml:space="preserve">
+  <data name="MainPage_OshimemChannelsUpdatesList_Title" xml:space="preserve">
     <value>推しメン</value>
   </data>
-  <data name="MainPage_PivotTitle" xml:space="preserve">
-    <value>AKBまとめ読み</value>
+  <data name="MainPage_PageHeaderTitle" xml:space="preserve">
+    <value>48まとめ読み</value>
   </data>
-  <data name="MainPage_TipsForMemberInfoMenu" xml:space="preserve">
-    <value>右下の「メンバー情報」メニューで
-推しメンを設定してください</value>
+  <data name="MainPage_TipsForNoMembers" xml:space="preserve">
+    <value>全員推しメン!?</value>
+  </data>
+  <data name="MainPage_TipsForNoOshimems" xml:space="preserve">
+    <value>右下の「グループ情報」「メンバー情報」で
+購読グループと推しメンを設定してください。</value>
   </data>
   <data name="Off" xml:space="preserve">
     <value>オフ</value>
@@ -224,7 +254,7 @@
     <value>アプリの詳細とレビュー</value>
   </data>
   <data name="PreferencesPage_ApplicationTitle" xml:space="preserve">
-    <value>AKBまとめ読み</value>
+    <value>48まとめ読み</value>
   </data>
   <data name="PreferencesPage_ApplicationVersion" xml:space="preserve">
     <value>アプリのバージョン</value>
@@ -242,7 +272,7 @@
     <value>プッシュ通知</value>
   </data>
   <data name="PreferencesPage_Notification_ReceiveNotificationDesc" xml:space="preserve">
-    <value>推しメンの新着情報をタイルとトースト通知で受け取ることができます。タイル通知を受け取るには電話機のアプリ一覧で「AKBまとめ読み」を長押ししてスタート画面に追加してください。
+    <value>推しメンの新着情報をタイルとトースト通知で受け取ることができます。タイル通知を受け取るには電話機のアプリ一覧で「48まとめ読み」を長押ししてスタート画面に追加してください。
 
 ※プッシュ通知の設定はネットワークが接続された状態で行ってください。</value>
   </data>
