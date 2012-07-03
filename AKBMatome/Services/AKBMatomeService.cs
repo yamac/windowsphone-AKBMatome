@@ -54,108 +54,15 @@ namespace AKBMatome.Services
                 return;
             }
 
-            //System.Diagnostics.Debug.WriteLine("GetAllFeedGroupsAndChannels:" + API.FeedGroups);
+            System.Diagnostics.Debug.WriteLine("GetAllFeedGroupsAndChannels:" + API.FeedGroups);
             var groupsReq = WebRequest.CreateHttp(API.FeedGroups);
             groupsReq.UserAgent = Constants.Net.UserAgent;
             groupsReq.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
-            //System.Diagnostics.Debug.WriteLine("GetAllFeedGroupsAndChannels:" + API.FeedChannels + "?group_id=1");
-            var channelsReq = WebRequest.CreateHttp(API.FeedChannels + "?group_id=1");
+            System.Diagnostics.Debug.WriteLine("GetAllFeedGroupsAndChannels:" + API.FeedChannels);
+            var channelsReq = WebRequest.CreateHttp(API.FeedChannels);
             channelsReq.UserAgent = Constants.Net.UserAgent;
             channelsReq.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
-            /*
-            FeedGroup[] groups = null;
-            FeedChannel[] channels = null;
-            Exception exception = null;
-            
-            try
-            {
-                Observable.ForkJoin(
-                    Observable
-                    .FromAsyncPattern<WebResponse>(groupsReq.BeginGetResponse, groupsReq.EndGetResponse)
-                    .Invoke()
-                    .Do(res =>
-                    {
-                        Stream stream = res.GetResponseStream();
-                        try
-                        {
-                            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FeedGroup[]));
-                            groups = (FeedGroup[])serializer.ReadObject(stream);
-                        }
-                        catch (Exception e)
-                        {
-                            System.Diagnostics.Debug.WriteLine("groupsReq");
-                            System.Diagnostics.Debug.WriteLine("position=" + stream.Position);
-                            exception = e;
-                        }
-                    }
-                    )
-                    ,
-                    Observable
-                    .FromAsyncPattern<WebResponse>(channelsReq.BeginGetResponse, channelsReq.EndGetResponse)
-                    .Invoke()
-                    .Do(res =>
-                    {
-                        Stream stream = res.GetResponseStream();
-                        try
-                        {
-                            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FeedChannel[]));
-                            channels = (FeedChannel[])serializer.ReadObject(stream);
-                        }
-                        catch (Exception e)
-                        {
-                            System.Diagnostics.Debug.WriteLine("channelsReq");
-                            System.Diagnostics.Debug.WriteLine("position=" + stream.Position);
-                            exception = e;
-                        }
-                    }
-                    )
-                )
-                .Subscribe(
-                    _ =>
-                    {
-                        if (exception != null)
-                        {
-                            callback(exception);
-                            return;
-                        }
 
-                        lock (this)
-                        {
-                            // 新規FeedGroupのみ抽出・追加
-                            var newGroupIds = (from theGroup in groups select theGroup.id).Except(from theGroup in dataContext.FeedGroups select theGroup.id);
-                            var newGroups = from theGroup in groups from newGroupId in newGroupIds where theGroup.id == newGroupId select theGroup;
-                            foreach (var newGroup in newGroups)
-                            {
-                                System.Diagnostics.Debug.WriteLine(newGroup.id + "," + newGroup.title);
-                                dataContext.FeedGroups.InsertOnSubmit(newGroup);
-                            }
-
-                            // 新規FeedChannelのみ抽出・追加
-                            var newChannelIds = (from channel in channels select channel.id).Except(from channel in dataContext.FeedChannels select channel.id);
-                            var newChannels = from channel in channels from newChannelId in newChannelIds where channel.id == newChannelId select channel;
-                            foreach (var newChannel in newChannels)
-                            {
-                                System.Diagnostics.Debug.WriteLine(newChannel.id + "," + newChannel.title);
-                                dataContext.FeedChannels.InsertOnSubmit(newChannel);
-                            }
-
-                            // サブミット
-                            dataContext.SubmitChanges();
-                        }
-
-                        callback(null);
-                    },
-                    e =>
-                    {
-                        callback(e);
-                    }
-                );
-            }
-            catch (Exception e)
-            {
-                callback(e);
-            }
-            */
             var groupsObs =
                 Observable
                 .FromAsyncPattern<WebResponse>(groupsReq.BeginGetResponse, groupsReq.EndGetResponse)()
@@ -175,22 +82,30 @@ namespace AKBMatome.Services
                         var groups = (FeedGroup[])serializer.ReadObject(stream);
 
                         // データ更新
-                        var existsGroupIds = (from theGroup in groups select theGroup.Id).Intersect(from theGroup in dataContext.FeedGroups select theGroup.Id);
-                        var existsGroups = from theGroup in groups from existsGroupId in existsGroupIds where theGroup.Id == existsGroupId select theGroup;
-                        foreach (var existsGroup in existsGroups)
+                        lock (dataContext)
                         {
-                            //System.Diagnostics.Debug.WriteLine("既存グループ:" + existsGroup.Id + "," + existsGroup.Title);
-                            var oldGroup = dataContext.FeedGroups.Single(theGroup => theGroup.Id == existsGroup.Id);
-                            oldGroup.Title = existsGroup.Title;
-                        }
+                            var existsGroupIds = (from theGroup in groups select theGroup.Id).Intersect(from theGroup in dataContext.FeedGroups select theGroup.Id);
+                            var existsGroups = from theGroup in groups from existsGroupId in existsGroupIds where theGroup.Id == existsGroupId select theGroup;
+                            foreach (var existsGroup in existsGroups)
+                            {
+                                System.Diagnostics.Debug.WriteLine("既存グループ:" + existsGroup.Id + "," + existsGroup.Title);
+                                var oldGroup = dataContext.FeedGroups.Single(theGroup => theGroup.Id == existsGroup.Id);
+                                oldGroup.Title = existsGroup.Title;
+                                oldGroup.Class = existsGroup.Class;
+                                oldGroup.AccentColor = existsGroup.AccentColor;
+                                oldGroup.Status = existsGroup.Status;
+                            }
 
-                        var newGroupIds = (from theGroup in groups select theGroup.Id).Except(from theGroup in dataContext.FeedGroups select theGroup.Id);
-                        var newGroups = from theGroup in groups from newGroupId in newGroupIds where theGroup.Id == newGroupId select theGroup;
-                        foreach (var newGroup in newGroups)
-                        {
-                            //System.Diagnostics.Debug.WriteLine("新規グループ:" + newGroup.Id + "," + newGroup.Title);
-                            dataContext.FeedGroups.InsertOnSubmit(newGroup);
-                        }
+                            var newGroupIds = (from theGroup in groups select theGroup.Id).Except(from theGroup in dataContext.FeedGroups select theGroup.Id);
+                            var newGroups = from theGroup in groups from newGroupId in newGroupIds where theGroup.Id == newGroupId select theGroup;
+                            foreach (var newGroup in newGroups)
+                            {
+                                System.Diagnostics.Debug.WriteLine("新規グループ:" + newGroup.Id + "," + newGroup.Title);
+                                newGroup.Subscribe = 100;
+                                dataContext.FeedGroups.InsertOnSubmit(newGroup);
+                            }
+                            dataContext.SubmitChanges();
+                        };
 
                         // ストリームを閉じる
                         stream.Close();
@@ -218,26 +133,37 @@ namespace AKBMatome.Services
                         var channels = (FeedChannel[])serializer.ReadObject(stream);
 
                         // データ更新
-                        var existsChannelIds = (from channel in channels select channel.Id).Intersect(from channel in dataContext.FeedChannels select channel.Id);
-                        var existsChannels = from channel in channels from existsChannelId in existsChannelIds where channel.Id == existsChannelId select channel;
-                        foreach (var existsChannel in existsChannels)
+                        lock (dataContext)
                         {
-                            //System.Diagnostics.Debug.WriteLine("既存チャンネル:" + existsChannel.Id + "," + existsChannel.Title);
-                            var oldChannel = dataContext.FeedChannels.Single(channel => channel.Id == existsChannel.Id);
-                            oldChannel.FeedGroupId = existsChannel.FeedGroupId;
-                            oldChannel.FeedLink = existsChannel.FeedLink;
-                            oldChannel.AuthorName = existsChannel.AuthorName;
-                            oldChannel.Link = existsChannel.Link;
-                            oldChannel.Title = existsChannel.Title;
-                        }
+                            var existsChannelIds = (from channel in channels select channel.Id).Intersect(from channel in dataContext.FeedChannels select channel.Id);
+                            var existsChannels = from channel in channels from existsChannelId in existsChannelIds where channel.Id == existsChannelId select channel;
+                            foreach (var existsChannel in existsChannels)
+                            {
+                                System.Diagnostics.Debug.WriteLine("既存チャンネル:" + existsChannel.Id + "," + existsChannel.Title);
+                                var oldChannel = dataContext.FeedChannels.Single(channel => channel.Id == existsChannel.Id);
+                                oldChannel.FeedGroupId = existsChannel.FeedGroupId;
+                                oldChannel.FeedLink = existsChannel.FeedLink;
+                                oldChannel.AuthorName = existsChannel.AuthorName;
+                                oldChannel.Link = existsChannel.Link;
+                                oldChannel.Title = existsChannel.Title;
+                                oldChannel.Status = existsChannel.Status;
+                            }
 
-                        var newChannelIds = (from channel in channels select channel.Id).Except(from channel in dataContext.FeedChannels select channel.Id);
-                        var newChannels = from channel in channels from newChannelId in newChannelIds where channel.Id == newChannelId select channel;
-                        foreach (var newChannel in newChannels)
-                        {
-                            //System.Diagnostics.Debug.WriteLine("新規チャンネル:" + newChannel.Id + "," + newChannel.Title);
-                            dataContext.FeedChannels.InsertOnSubmit(newChannel);
-                        }
+                            var newChannelIds = (from channel in channels select channel.Id).Except(from channel in dataContext.FeedChannels select channel.Id);
+                            var newChannels = from channel in channels from newChannelId in newChannelIds where channel.Id == newChannelId select channel;
+                            foreach (var newChannel in newChannels)
+                            {
+                                System.Diagnostics.Debug.WriteLine("新規チャンネル:" + newChannel.Id + "," + newChannel.Title);
+#if DEBUG
+                                if (newChannel.FeedGroupId != 2)
+                                {
+                                    //newChannel.Priority = 100;
+                                }
+#endif
+                                dataContext.FeedChannels.InsertOnSubmit(newChannel);
+                            }
+                            dataContext.SubmitChanges();
+                        };
 
                         // ストリームを閉じる
                         stream.Close();
@@ -246,32 +172,12 @@ namespace AKBMatome.Services
                         return 1;
                     }
                 );
-            /*
-            Observable
-            .ForkJoin(groupsObs, channelsObs)
-            .Subscribe(
-                _ =>
-                {
-                    // サブミット
-                    System.Diagnostics.Debug.WriteLine("Subscribe.OK");
-                    dataContext.SubmitChanges();
-                    callback(null);
-                }
-                ,
-                e =>
-                {
-                    System.Diagnostics.Debug.WriteLine("Subscribe.Error");
-                    callback(e);
-                }
-            );
-            */
-            /*
+            
             groupsObs.SelectMany(a => channelsObs)
             .Subscribe(
                 _ =>
                 {
                     // サブミット
-                    dataContext.SubmitChanges();
                     callback(null);
                 }
                 ,
@@ -280,103 +186,83 @@ namespace AKBMatome.Services
                     callback(e);
                 }
             );
-            */
-            channelsObs
+        }
+
+        public void GetAllFeedGroups(FeedDataContext dataContext, Action<Exception> callback, bool update)
+        {
+            if (!update && (dataContext.FeedGroups.Count() > 0))
+            {
+                callback(null);
+                return;
+            }
+
+            System.Diagnostics.Debug.WriteLine("GetAllFeedGroups:" + API.FeedGroups);
+            var groupsReq = WebRequest.CreateHttp(API.FeedGroups);
+            groupsReq.UserAgent = Constants.Net.UserAgent;
+            groupsReq.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
+
+            var groupsObs =
+                Observable
+                .FromAsyncPattern<WebResponse>(groupsReq.BeginGetResponse, groupsReq.EndGetResponse)()
+                .Select
+                (
+                    res =>
+                    {
+                        // ストリームを取得
+                        Stream stream = res.GetResponseStream();
+                        if (string.Equals("gzip", res.Headers[HttpRequestHeader.ContentEncoding], StringComparison.OrdinalIgnoreCase))
+                        {
+                            stream = new GZipInputStream(stream);
+                        }
+
+                        // シリアライズ
+                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FeedGroup[]));
+                        var groups = (FeedGroup[])serializer.ReadObject(stream);
+
+                        // データ更新
+                        lock (dataContext)
+                        {
+                            var existsGroupIds = (from theGroup in groups select theGroup.Id).Intersect(from theGroup in dataContext.FeedGroups select theGroup.Id);
+                            var existsGroups = from theGroup in groups from existsGroupId in existsGroupIds where theGroup.Id == existsGroupId select theGroup;
+                            foreach (var existsGroup in existsGroups)
+                            {
+                                System.Diagnostics.Debug.WriteLine("既存グループ:" + existsGroup.Id + "," + existsGroup.Title);
+                                var oldGroup = dataContext.FeedGroups.Single(theGroup => theGroup.Id == existsGroup.Id);
+                                oldGroup.Title = existsGroup.Title;
+                                oldGroup.Class = existsGroup.Class;
+                                oldGroup.AccentColor = existsGroup.AccentColor;
+                                oldGroup.Status = existsGroup.Status;
+                            }
+
+                            var newGroupIds = (from theGroup in groups select theGroup.Id).Except(from theGroup in dataContext.FeedGroups select theGroup.Id);
+                            var newGroups = from theGroup in groups from newGroupId in newGroupIds where theGroup.Id == newGroupId select theGroup;
+                            foreach (var newGroup in newGroups)
+                            {
+                                System.Diagnostics.Debug.WriteLine("新規グループ:" + newGroup.Id + "," + newGroup.Title);
+                                newGroup.Subscribe = 100;
+                                dataContext.FeedGroups.InsertOnSubmit(newGroup);
+                            }
+                            dataContext.SubmitChanges();
+                        };
+
+                        // ストリームを閉じる
+                        stream.Close();
+
+                        return 1;
+                    }
+                );
+
+            groupsObs
             .Subscribe(
                 _ =>
                 {
                     // サブミット
-                    dataContext.SubmitChanges();
                     callback(null);
                 }
                 ,
                 e =>
                 {
                     callback(e);
-                }
-            );
-        }
-
-        public void GetFeedGroups(int[] groupIds, Action<FeedGroup[], Exception> callback)
-        {
-            string uri = API.FeedGroups;
-            if (groupIds == null)
-            {
-                groupIds = new int[]{ 1 };
-            }
-            if (groupIds != null)
-            {
-                uri += "?group_id=" + string.Join(",", groupIds);
-            }
-            //System.Diagnostics.Debug.WriteLine("GetFeedGroups:" + uri);
-            var req = WebRequest.CreateHttp(uri);
-            req.UserAgent = Constants.Net.UserAgent;
-
-            Observable
-            .FromAsyncPattern<WebResponse>(req.BeginGetResponse, req.EndGetResponse)
-            .Invoke()
-            .Select(res =>
-                {
-                    Stream stream = res.GetResponseStream();
-                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FeedGroup[]));
-                    FeedGroup[] infos = (FeedGroup[])serializer.ReadObject(stream);
-                    return infos;
-                }
-            )
-            .Subscribe(
-                s =>
-                {
-                    callback(s, null);
-                },
-                e =>
-                {
-                    callback(null, e);
-                }
-            );
-        }
-
-        public void GetFeedChannels(int[] groupIds, int[] channelIds, Action<FeedChannel[], Exception> callback)
-        {
-            bool hasParams = false;
-            string uri = API.FeedChannels;
-            if (groupIds == null)
-            {
-                groupIds = new int[] { 1 };
-            }
-            if (groupIds != null)
-            {
-                uri += (hasParams ? "&" : "?") + "group_id=" + string.Join(",", groupIds);
-                hasParams = true;
-            }
-            if (channelIds != null)
-            {
-                uri += (hasParams ? "&" : "?") + "channel_id=" + string.Join(",", channelIds);
-                hasParams = true;
-            }
-            uri += (hasParams ? "&" : "?") + "rows=20";
-            //System.Diagnostics.Debug.WriteLine("GetFeedChannels:" + uri);
-            var req = WebRequest.CreateHttp(uri);
-            req.UserAgent = Constants.Net.UserAgent;
-
-            Observable
-            .FromAsyncPattern<WebResponse>(req.BeginGetResponse, req.EndGetResponse)
-            .Invoke()
-            .Select(res =>
-            {
-                Stream stream = res.GetResponseStream();
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FeedChannel[]));
-                FeedChannel[] channels = (FeedChannel[])serializer.ReadObject(stream);
-                return channels;
-            }
-            )
-            .Subscribe(
-                s =>
-                {
-                    callback(s, null);
-                },
-                e =>
-                {
-                    callback(null, e);
                 }
             );
         }
@@ -393,26 +279,16 @@ namespace AKBMatome.Services
             }
         }
 
-        public void GetFeedItems(FeedDataContext dataContext, int[] groupIds, int[] channelIds, int page, Action<GetFeedItemsResult, Exception> callback)
+        public void GetFeedItems(FeedDataContext dataContext, int classId, int[] channelIds, int page, Action<GetFeedItemsResult, Exception> callback)
         {
-            bool hasParams = false;
             string uri = API.FeedItems;
-            if (groupIds == null)
-            {
-                groupIds = new int[] { 1 };
-            }
-            if (groupIds != null)
-            {
-                uri += (hasParams ? "&" : "?") + "group_id=" + string.Join(",", groupIds);
-                hasParams = true;
-            }
+            uri += "?" + "class=" + classId;
             if (channelIds != null)
             {
-                uri += (hasParams ? "&" : "?") + "channel_id=" + string.Join(",", channelIds);
-                hasParams = true;
+                uri += "&" + "channel_id=" + string.Join(",", channelIds);
             }
-            uri += (hasParams ? "&" : "?") + "rows=" + Constants.App.ItemsPerPage + "&page=" + page;
-            //System.Diagnostics.Debug.WriteLine("GetFeedItems:" + uri);
+            uri += "&" + "rows=" + Constants.App.ItemsPerPage + "&page=" + page;
+            System.Diagnostics.Debug.WriteLine("GetFeedItems:" + uri);
             var req = WebRequest.CreateHttp(uri);
             req.UserAgent = Constants.Net.UserAgent;
             req.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";

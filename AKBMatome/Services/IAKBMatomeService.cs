@@ -6,10 +6,9 @@ namespace AKBMatome.Services
     public interface IAKBMatomeService
     {
         // Feed
+        void GetAllFeedGroups(FeedDataContext dataContext, Action<Exception> callback, bool update);
         void GetAllFeedGroupsAndChannels(FeedDataContext dataContext, Action<Exception> callback, bool update);
-        void GetFeedGroups(int[] groupIds, Action<FeedGroup[], Exception> callback);
-        void GetFeedChannels(int[] groupIds, int[] channelIds, Action<FeedChannel[], Exception> callback);
-        void GetFeedItems(FeedDataContext dataContext, int[] groupIds, int[] channelIds, int page, Action<AKBMatomeService.GetFeedItemsResult, Exception> callback);
+        void GetFeedItems(FeedDataContext dataContext, int classId, int[] channelIds, int page, Action<AKBMatomeService.GetFeedItemsResult, Exception> callback);
     
         // Notification
         void RegisterNotificationChannel(string version, string langCode, Action<AKBMatomeService.RegisterNotificationChannelResult, Exception> callback);

@@ -13,7 +13,7 @@ namespace AKBMatome
 #if DEBUG
             public const int FeedChannelExpireDays = 0;
 #else
-            public const int FeedChannelExpireDays = 7;
+            public const int FeedChannelExpireDays = 30;
 #endif
             public const int ItemsPerPage = 10;
             public const int BasePage = 1;
@@ -30,6 +30,9 @@ namespace AKBMatome
         public static class MessageTokens
         {
             public const string InitializeCompleted = "InitializeCompletedToken";
+            public const string GroupListInitializeCompleted = "GroupListInitializeCompletedToken";
+            public const string FeedGroupsUpdated = "FeedGroupsUpdated";
+            public const string ChannelListInitializeCompleted = "ChannelListInitializeCompletedToken";
             public const string FeedChannelsUpdated = "FeedChannelsUpdated";
             public const string NotificationUpdated = "NotificationUpdated";
         }
