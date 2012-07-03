@@ -1,15 +1,18 @@
-Desc1     : All about AKB48!
+Desc1     : All about 48!
 Desc2     :
-Do you want to get all about the AKB48? Read tons of blog articles for member of AKB48 by using this application.
+A '48 NEWS' app allows you to read AKB48, SKE48, HKT48 and NMB48 member's blog.
+You can also read 48 fan's web scraps.
 
-Configure your 'oshimems' to read articles for your prefered members and others separately. You can also choose a color for each member to indicates whose article.
+Configure group to subscribe member's blog for your prefered group.
+Configure your 'oshimems' to read blog for your prefered members and others separately. You can also choose a color for each member to indicates whose article.
 
-Enabling push notification, you can receive oshimem's updates.
+Enabling push notification, you can receive push notification when 'oshimem' posts a blog article.
 
 *SOME CONTENTS SUCH AS MEMBER NAMES, BLOG TITLES AND BLOG ARTICLES ARE DISPLAYED IN JAPANESE.
 *PUSH NOTIFICATION FUNCTIONALITY IS BETA VERSION. IT MAY NOT WORK CORRECTLY.
 
 Versions
+2.0.0.0: Renewal as '48 NEWS'. Added member of SKE48, HKT48 and NMB48.
 1.6.0.0: Improved push notification functionality.
 1.5.0.0: Added push notification functionality.
 1.4.0.0: Added an English language support. Improved application stability.
