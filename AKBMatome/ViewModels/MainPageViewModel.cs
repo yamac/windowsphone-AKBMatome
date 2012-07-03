@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
 using System.Windows.Input;
 using AKBMatome.Data;
 using AKBMatome.Navigation;
 using AKBMatome.Services;
 using Microsoft.Phone.Controls;
-using SimpleMvvmToolkit;
 using Microsoft.Phone.Shell;
-using System.Linq;
-using System.Globalization;
-using System.Threading;
-using System.Windows.Media;
+using SimpleMvvmToolkit;
 
 namespace AKBMatome.ViewModels
 {
@@ -26,12 +24,14 @@ namespace AKBMatome.ViewModels
         public MainPageViewModel(PhoneApplicationFrame app, INavigator navigator, Services.IAKBMatomeService service, FeedDataContext dataContext)
         {
             RegisterToReceiveMessages(Constants.MessageTokens.InitializeCompleted, OnInitializeCompleted);
-            RegisterToReceiveMessages(Constants.MessageTokens.FeedChannelsUpdated, OnFeedChannelsUpdated);
+            RegisterToReceiveMessages(Constants.MessageTokens.FeedGroupsUpdated, OnFeedGroupsOrChannelsUpdated);
+            RegisterToReceiveMessages(Constants.MessageTokens.FeedChannelsUpdated, OnFeedGroupsOrChannelsUpdated);
             RegisterToReceiveMessages(Constants.MessageTokens.NotificationUpdated, OnNotificationUpdated);
             this.app = app;
             this.navigator = navigator;
             this.service = service;
             this.dataContext = dataContext;
+            IsInitializing = true;
             if (!IsInDesignMode)
             {
                 DateTime lastUpdate = Helpers.AppSettings.GetValueOrDefault<DateTime>(Constants.AppKey.LastUpdate, DateTime.MinValue);
@@ -72,19 +72,8 @@ namespace AKBMatome.ViewModels
                 service.UpdateNotificationChannel(uuid, Helpers.AppAttributes.Version, uicc.Name, null, true, UpdateNotificationChannelCompleted);
             }
 
-            ObservableCollection<MainPagePivotItemViewModel> items = new ObservableCollection<MainPagePivotItemViewModel>();
-            MainPagePivotItemViewModel vm;
-            vm = new MainPagePivotItemViewModel(app, navigator, service, dataContext, MainPagePivotItemViewModel.PivotItemType.OshiMem);
-            vm.ErrorNotice += OnErrorNotice;
-            items.Add(vm);
-            vm = new MainPagePivotItemViewModel(app, navigator, service, dataContext, MainPagePivotItemViewModel.PivotItemType.OtherMember);
-            vm.ErrorNotice += OnErrorNotice;
-            items.Add(vm);
-            PivotItems = items;
-            initialized = true;
-            Helpers.AppSettings.AddOrUpdateValue(Constants.AppKey.LastUpdate, DateTime.Now);
-            PivotItems[0].LoadFeedItems(true, false);
-            PivotItemSelectedIndex = 0;
+            InitPivotItems();
+            LoadPivotItem(0, true);
 
             ShellTile shellTile = ShellTile.ActiveTiles.First();
             StandardTileData shellTileData = new StandardTileData()
@@ -94,23 +83,34 @@ namespace AKBMatome.ViewModels
                 Count = 0,
             };
             shellTile.Update(shellTileData);
+
+            IsInitializing = false;
         }
 
-        private void OnFeedChannelsUpdated(object sender, NotificationEventArgs e)
+        private void OnFeedGroupsOrChannelsUpdated(object sender, NotificationEventArgs e)
         {
-            PivotItems[0].LoadFeedItems(true, false);
-            PivotItems[1].LoadFeedItems(true, false);
+            LoadPivotItem(0, true);
+            LoadPivotItem(1, true);
         }
 
         private void OnNotificationUpdated(object sender, NotificationEventArgs e)
         {
-            int[] channelIds = (from channel in dataContext.FeedChannels where channel.Priority == 100 select channel.Id).ToArray();
-            string uuid = Helpers.AppSettings.GetValueOrDefault<string>(Constants.AppKey.NotificationUuid, null);
-            if (uuid != null)
+            lock (dataContext)
             {
-                CultureInfo uicc = Thread.CurrentThread.CurrentUICulture;
-                service.UpdateNotificationChannel(uuid, Helpers.AppAttributes.Version, uicc.Name, channelIds, true, UpdateNotificationChannelCompleted);
-            }
+                int[] channelIds =
+                    (
+                        from channel in dataContext.FeedChannels
+                        where channel.Priority == 100 && channel.FeedGroup.Class == 1 && channel.FeedGroup.Subscribe == 100
+                        select channel.Id
+                    )
+                    .ToArray();
+                string uuid = Helpers.AppSettings.GetValueOrDefault<string>(Constants.AppKey.NotificationUuid, null);
+                if (uuid != null)
+                {
+                    CultureInfo uicc = Thread.CurrentThread.CurrentUICulture;
+                    service.UpdateNotificationChannel(uuid, Helpers.AppAttributes.Version, uicc.Name, channelIds, true, UpdateNotificationChannelCompleted);
+                }
+            };
         }
 
         #endregion
@@ -132,7 +132,17 @@ namespace AKBMatome.ViewModels
          * Properties *
          **************/
 
-        private bool initialized = false;
+        private bool _IsInitializing = true;
+        public bool IsInitializing
+        {
+            get { return _IsInitializing; }
+            set
+            {
+                if (_IsInitializing == value) return;
+                _IsInitializing = value;
+                NotifyPropertyChanged(m => IsInitializing);
+            }
+        }
 
         private bool _IsBusy = false;
         public bool IsBusy
@@ -146,27 +156,39 @@ namespace AKBMatome.ViewModels
             }
         }
 
-        private ObservableCollection<MainPagePivotItemViewModel> _PivotItems = new ObservableCollection<MainPagePivotItemViewModel>();
-        public ObservableCollection<MainPagePivotItemViewModel> PivotItems
+        private ChannelsUpdatesListViewModel _OshimemChannelsUpdatesListViewModel = null;
+        public ChannelsUpdatesListViewModel OshimemChannelsUpdatesListViewModel
         {
-            get { return _PivotItems; }
+            get { return _OshimemChannelsUpdatesListViewModel; }
             set
             {
-                if (_PivotItems == value) return;
-                _PivotItems = value;
-                NotifyPropertyChanged(m => PivotItems);
+                if (_OshimemChannelsUpdatesListViewModel == value) return;
+                _OshimemChannelsUpdatesListViewModel = value;
+                NotifyPropertyChanged(m => OshimemChannelsUpdatesListViewModel);
             }
         }
 
-        private int _PivotItemSelectedIndex = -1;
-        public int PivotItemSelectedIndex
+        private ChannelsUpdatesListViewModel _MemberChannelsUpdatesListViewModel = null;
+        public ChannelsUpdatesListViewModel MemberChannelsUpdatesListViewModel
         {
-            get { return _PivotItemSelectedIndex; }
+            get { return _MemberChannelsUpdatesListViewModel; }
             set
             {
-                if (_PivotItemSelectedIndex == value) return;
-                _PivotItemSelectedIndex = value;
-                NotifyPropertyChanged(m => PivotItemSelectedIndex);
+                if (_MemberChannelsUpdatesListViewModel == value) return;
+                _MemberChannelsUpdatesListViewModel = value;
+                NotifyPropertyChanged(m => MemberChannelsUpdatesListViewModel);
+            }
+        }
+
+        private ChannelsUpdatesListViewModel _MatomeChannelsUpdatesListViewModel = null;
+        public ChannelsUpdatesListViewModel MatomeChannelsUpdatesListViewModel
+        {
+            get { return _MatomeChannelsUpdatesListViewModel; }
+            set
+            {
+                if (_MatomeChannelsUpdatesListViewModel == value) return;
+                _MatomeChannelsUpdatesListViewModel = value;
+                NotifyPropertyChanged(m => MatomeChannelsUpdatesListViewModel);
             }
         }
 
@@ -184,7 +206,7 @@ namespace AKBMatome.ViewModels
                 return new DelegateCommand<Pivot>(
                 (e) =>
                 {
-                    (e.SelectedItem as MainPagePivotItemViewModel).LoadFeedItems(false, false);
+                    LoadPivotItem(e.SelectedIndex, false);
                 }
                 );
             }
@@ -197,12 +219,7 @@ namespace AKBMatome.ViewModels
                 return new DelegateCommand<Pivot>(
                 (e) =>
                 {
-                    if (!initialized)
-                    {
-                        LoadAllFeedGroupsAndChannels();
-                        return;
-                    }
-                    (e.SelectedItem as MainPagePivotItemViewModel).LoadFeedItems(true, false);
+                    LoadPivotItem(e.SelectedIndex, true);
                 }
                 ,
                 (e) =>
@@ -211,15 +228,26 @@ namespace AKBMatome.ViewModels
                     {
                         return false;
                     }
-                    if (!initialized)
-                    {
-                        return true;
-                    }
                     if (e.SelectedItem == null)
                     {
                         return false;
                     }
-                    return !(e.SelectedItem as MainPagePivotItemViewModel).IsBusy;
+                    switch (e.SelectedIndex)
+                    {
+                        case 0:
+                            {
+                                return !OshimemChannelsUpdatesListViewModel.IsBusy;
+                            }
+                        case 1:
+                            {
+                                return !MemberChannelsUpdatesListViewModel.IsBusy;
+                            }
+                        case 2:
+                            {
+                                return !MatomeChannelsUpdatesListViewModel.IsBusy;
+                            }
+                    }
+                    return false;
                 }
                 );
             }
@@ -253,7 +281,91 @@ namespace AKBMatome.ViewModels
         public void LoadAllFeedGroupsAndChannels()
         {
             IsBusy = true;
-            service.GetAllFeedGroupsAndChannels(dataContext, GetAllFeedGroupsAndChannelsCompleted, true);
+            service.GetAllFeedGroupsAndChannels(dataContext, GetAllFeedGroupsAndChannelsCompleted, false);
+        }
+
+        private void InitPivotItems()
+        {
+            OshimemChannelsUpdatesListViewModel =
+                new ChannelsUpdatesListViewModel
+                (
+                    app, navigator, service, dataContext,
+                    true,
+                    Localization.AppResources.MainPage_OshimemChannelsUpdatesList_Title
+                );
+            OshimemChannelsUpdatesListViewModel.ErrorNotice += OnErrorNotice;
+
+            MemberChannelsUpdatesListViewModel =
+                new ChannelsUpdatesListViewModel
+                (
+                    app, navigator, service, dataContext,
+                    false,
+                    Localization.AppResources.MainPage_MemberChannelsUpdatesList_Title
+                );
+            MemberChannelsUpdatesListViewModel.ErrorNotice += OnErrorNotice;
+
+            MatomeChannelsUpdatesListViewModel =
+                new ChannelsUpdatesListViewModel
+                (
+                    app, navigator, service, dataContext,
+                    false,
+                    Localization.AppResources.MainPage_MatomeChannelsUpdatesList_Title
+                );
+            MatomeChannelsUpdatesListViewModel.ErrorNotice += OnErrorNotice;
+        }
+
+        private void LoadPivotItem(int id, bool force)
+        {
+            switch (id)
+            {
+                case 0:
+                    {
+                        if (force || OshimemChannelsUpdatesListViewModel.FeedItems.Count == 0)
+                        {
+                            lock (dataContext)
+                            {
+                                int[] channelIds =
+                                    (
+                                        from channel in dataContext.FeedChannels
+                                        where channel.Priority == 100 && channel.FeedGroup.Class == 1 && channel.FeedGroup.Subscribe == 100
+                                        select channel.Id
+                                    )
+                                    .ToArray();
+                                OshimemChannelsUpdatesListViewModel.SetChannelIdsAndClass(channelIds, 1);
+                            };
+                            OshimemChannelsUpdatesListViewModel.LoadFeedItems(true, false);
+                        }
+                        break;
+                    }
+                case 1:
+                    {
+                        if (force || MemberChannelsUpdatesListViewModel.FeedItems.Count == 0)
+                        {
+                            lock (dataContext)
+                            {
+                                int[] channelIds =
+                                    (
+                                        from channel in dataContext.FeedChannels
+                                        where channel.Priority != 100 && channel.FeedGroup.Class == 1 && channel.FeedGroup.Subscribe == 100
+                                        select channel.Id
+                                    )
+                                    .ToArray();
+                                MemberChannelsUpdatesListViewModel.SetChannelIdsAndClass(channelIds, 1);
+                            };
+                            MemberChannelsUpdatesListViewModel.LoadFeedItems(true, false);
+                    }
+                        break;
+                    }
+                case 2:
+                    {
+                        if (force || MatomeChannelsUpdatesListViewModel.FeedItems.Count == 0)
+                        {
+                            MatomeChannelsUpdatesListViewModel.SetChannelIdsAndClass(null, 2);
+                            MatomeChannelsUpdatesListViewModel.LoadFeedItems(true, false);
+                        }
+                        break;
+                    }
+            }
         }
 
         #endregion

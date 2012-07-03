@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Controls;
 using System.Windows.Input;
 using AKBMatome.Data;
 using AKBMatome.Navigation;
-using SimpleMvvmToolkit;
+using AKBMatome.Services;
+using Helpers;
 using Microsoft.Phone.Controls;
+using SimpleMvvmToolkit;
 
 namespace AKBMatome.ViewModels
 {
@@ -19,12 +20,14 @@ namespace AKBMatome.ViewModels
 
         public ChannelListPageViewModel() { }
 
-        public ChannelListPageViewModel(INavigator navigator,FeedDataContext dataContext)
+        public ChannelListPageViewModel(PhoneApplicationFrame app, INavigator navigator, Services.IAKBMatomeService service, FeedDataContext dataContext)
         {
-            System.Diagnostics.Debug.WriteLine("ChannelListPageViewModel");
+            RegisterToReceiveMessages(Constants.MessageTokens.ChannelListInitializeCompleted, OnInitializeCompleted);
+            this.app = app;
             this.navigator = navigator;
+            this.service = service;
             this.dataContext = dataContext;
-            LoadFeedChannels();
+            LoadAllFeedGroupsAndChannels();
         }
 
         #endregion
@@ -36,6 +39,11 @@ namespace AKBMatome.ViewModels
 
         public event EventHandler<NotificationEventArgs<Exception>> ErrorNotice;
 
+        private void OnInitializeCompleted(object sender, NotificationEventArgs e)
+        {
+            LoadFeedChannels();
+        }
+
         #endregion
 
         #region Services
@@ -43,7 +51,9 @@ namespace AKBMatome.ViewModels
          * Services *
          ************/
 
+        PhoneApplicationFrame app;
         INavigator navigator;
+        IAKBMatomeService service;
         FeedDataContext dataContext;
 
         #endregion
@@ -53,8 +63,20 @@ namespace AKBMatome.ViewModels
          * Properties *
          **************/
 
-        private ObservableCollection<FeedChannel> _FeedChannels;
-        public ObservableCollection<FeedChannel> FeedChannels
+        private bool _IsBusy = false;
+        public bool IsBusy
+        {
+            get { return _IsBusy; }
+            set
+            {
+                if (_IsBusy == value) return;
+                _IsBusy = value;
+                NotifyPropertyChanged(m => IsBusy);
+            }
+        }
+
+        private ObservableCollection<PublicGrouping<FeedGroup, FeedChannel>> _FeedChannels;
+        public ObservableCollection<PublicGrouping<FeedGroup, FeedChannel>> FeedChannels
         {
             get { return _FeedChannels; }
             set
@@ -72,7 +94,7 @@ namespace AKBMatome.ViewModels
          * Commands *
          ************/
 
-        public ICommand FeedChannelSelectionChangedCommand
+        public ICommand ListSelectionChangedCommand
         {
             get
             {
@@ -95,10 +117,24 @@ namespace AKBMatome.ViewModels
          * Methods *
          ***********/
 
+        private void LoadAllFeedGroupsAndChannels()
+        {
+            IsBusy = true;
+            service.GetAllFeedGroupsAndChannels(dataContext, GetAllFeedGroupsAndChannelsCompleted, true);
+        }
+
         private void LoadFeedChannels()
         {
-            FeedChannel[] channels = (from channel in dataContext.FeedChannels orderby channel.Priority descending select channel).ToArray();
-            FeedChannels = new ObservableCollection<FeedChannel>(channels);
+            lock (dataContext)
+            {
+                var groupedChannels =
+                    from channel in dataContext.FeedChannels
+                    where channel.FeedGroup.Class == 1 && channel.FeedGroup.Subscribe == 100 && channel.FeedGroup.Status == 1 && channel.Status == 1
+                    orderby channel.Priority descending, channel.AuthorName ascending
+                    group channel by channel.FeedGroup into grouping
+                    select new PublicGrouping<FeedGroup, FeedChannel>(grouping);
+                FeedChannels = new ObservableCollection<PublicGrouping<FeedGroup, FeedChannel>>(groupedChannels);
+            };
         }
 
         #endregion
@@ -107,6 +143,24 @@ namespace AKBMatome.ViewModels
         /************************
          * Completion Callbacks *
          ************************/
+
+        private void GetAllFeedGroupsAndChannelsCompleted(Exception error)
+        {
+            if (!IsBusy)
+            {
+                return;
+            }
+
+            IsBusy = false;
+
+            if (error != null)
+            {
+                NotifyError(Localization.AppResources.MainPage_Error_FailedToGetAllFeedGroupsAndChannels, error);
+                return;
+            }
+
+            SendMessage(Constants.MessageTokens.ChannelListInitializeCompleted, new NotificationEventArgs());
+        }
 
         #endregion
 

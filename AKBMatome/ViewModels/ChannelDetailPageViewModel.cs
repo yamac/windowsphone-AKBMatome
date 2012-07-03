@@ -20,11 +20,11 @@ namespace AKBMatome.ViewModels
 
         public ChannelDetailPageViewModel(INavigator navigator, FeedDataContext dataContext)
         {
-            System.Diagnostics.Debug.WriteLine("ChannelDetailPageViewModel");
             this.navigator = navigator;
             this.dataContext = dataContext;
             LoadFeedChannel(((FeedChannel)NavigationService.NavigationArgs).Id);
         }
+
         #endregion
 
         #region Notifications
@@ -91,7 +91,6 @@ namespace AKBMatome.ViewModels
                 );
             }
         }
-
 
         public ICommand AccentColorPickerInitializedCommand
         {
@@ -169,7 +168,10 @@ namespace AKBMatome.ViewModels
 
         private void LoadFeedChannel(int id)
         {
-            TheFeedChannel = dataContext.FeedChannels.Single(channel => channel.Id == id);
+            lock (dataContext)
+            {
+                TheFeedChannel = dataContext.FeedChannels.Single(channel => channel.Id == id);
+            };
         }
 
         private void SubmitChanges()
