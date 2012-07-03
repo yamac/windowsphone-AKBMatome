@@ -101,6 +101,7 @@
     <Compile Include="Helpers\BindableApplicationBarMenuItem.cs" />
     <Compile Include="Helpers\DataTemplateSelector.cs" />
     <Compile Include="Helpers\ObjectCollection.cs" />
+    <Compile Include="Helpers\PublicGrouping.cs" />
     <Compile Include="Helpers\VisualTreeHelperExtensions.cs" />
     <Compile Include="Helpers\AppAttributes.cs" />
     <Compile Include="LocalControls\HeaderedContentControl.cs" />
@@ -126,14 +127,18 @@
     <Compile Include="SampleData\MainPageSampleData.cs" />
     <Compile Include="SampleData\ChannelListPageSampleData.cs" />
     <Compile Include="SampleData\ChannelDetailPageSampleData.cs" />
+    <Compile Include="SampleData\GroupListPageSampleData.cs" />
+    <Compile Include="SampleData\GroupDetailPageSampleData.cs" />
     <Compile Include="Services\IAKBMatomeService.cs" />
     <Compile Include="Services\AKBMatomeService.cs" />
-    <Compile Include="ViewModels\MainPagePivotItemViewModel.cs" />
+    <Compile Include="ViewModels\ChannelsUpdatesListViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\WebPageViewModel.cs" />
     <Compile Include="ViewModels\ChannelListPageViewModel.cs" />
     <Compile Include="ViewModels\ChannelDetailPageViewModel.cs" />
     <Compile Include="ViewModels\PreferencesPageViewModel.cs" />
+    <Compile Include="ViewModels\GroupListPageViewModel.cs" />
+    <Compile Include="ViewModels\GroupDetailPageViewModel.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -148,6 +153,12 @@
     </Compile>
     <Compile Include="Views\WebPage.xaml.cs">
       <DependentUpon>WebPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GroupListPage.xaml.cs">
+      <DependentUpon>GroupListPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GroupDetailPage.xaml.cs">
+      <DependentUpon>GroupDetailPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Yamac\Controls\WebBrowser.xaml.cs">
       <DependentUpon>WebBrowser.xaml</DependentUpon>
@@ -179,6 +190,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\WebPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\GroupListPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\GroupDetailPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

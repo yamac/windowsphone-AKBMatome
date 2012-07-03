@@ -14,6 +14,7 @@
 
     <!--アプリケーション リソース-->
     <Application.Resources>
+        
         <locators:ViewModelLocator x:Key="Locator"/>
 
         <local:LocalizedResources
@@ -218,6 +219,340 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- 記事リスト:アイテム -->
+        <DataTemplate x:Key="MemberFeedItemItemTemplate">
+            <helpers:ResourceDataTemplateSelector Content="{Binding}">
+                <helpers:ResourceDataTemplateSelector.Resources>
+                    <!-- 標準アイテム -->
+                    <DataTemplate x:Key="FeedItemNormalTemplate">
+                        <!-- アイテム -->
+                        <Grid Margin="{StaticResource PhoneVerticalMargin}">
+                            <Grid Width="435" Margin="5,0,0,0">
+                                <!-- 列定義 -->
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- 左のカラーバー -->
+                                <Rectangle
+                                    Grid.Column="0"
+                                    Fill="{Binding AccentColor, Converter={StaticResource ColorCodeToSolidColorBrushConverter}}"
+                                    />
+
+                                <!-- 背景色 -->
+                                <Rectangle
+                                    Grid.Column="1"
+                                    Fill="{Binding FeedGroupAccentColor, Converter={StaticResource ColorCodeToSolidColorBrushConverter}}"
+                                    Opacity="0.15"
+                                    />
+
+                                <!-- チャンネル -->
+                                <StackPanel Grid.Column="1">
+                                    <!-- グループ名 -->
+                                    <TextBlock
+                                        TextAlignment="Left"
+                                        VerticalAlignment="Bottom"
+                                        TextWrapping="Wrap"
+                                        Text="{Binding FeedGroupTitle}"
+                                        Style="{StaticResource PhoneTextSubtleStyle}"
+                                        />
+
+                                    <!-- チャンネル著者名+アイテム日時 -->
+                                    <StackPanel Orientation="Horizontal">
+                                        <!-- チャンネル著者名 -->
+                                        <TextBlock
+                                            Width="260"
+                                            TextAlignment="Left"
+                                            VerticalAlignment="Bottom"
+                                            TextWrapping="Wrap"
+                                            Text="{Binding FeedChannelAuthorName}"
+                                            Style="{StaticResource PhoneTextNormalStyle}"
+                                            />
+
+                                        <!-- アイテム日時 -->
+                                        <TextBlock
+                                            Width="117"
+                                            FontSize="13"
+                                            TextAlignment="Right"
+                                            VerticalAlignment="Bottom"
+                                            TextWrapping="NoWrap"
+                                            Text="{Binding PublishedAt, Converter={StaticResource DateTimeToTimelineFormatStringConverter}}"
+                                            Style="{StaticResource PhoneTextSubtleStyle}"
+                                            />
+                                    </StackPanel>
+
+                                    <!-- アイテム -->
+                                    <Grid Margin="0,10,0,10">
+                                        <!-- アイテムタイトル -->
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            FontSize="32"
+                                            TextAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            TextWrapping="Wrap"
+                                            Text="{Binding Title}"
+                                            Style="{StaticResource PhoneTextNormalStyle}"
+                                            />
+                                    </Grid>
+
+                                    <!-- チャンネルタイトル -->
+                                    <TextBlock
+                                        FontSize="13"
+                                        TextAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        TextWrapping="Wrap"
+                                        Text="{Binding FeedChannelTitle}"
+                                        Style="{StaticResource PhoneTextSubtleStyle}"
+                                        />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+
+                    <!-- 画像付きアイテム -->
+                    <DataTemplate x:Key="FeedItemImageTemplate">
+                        <!-- アイテム -->
+                        <Grid Margin="{StaticResource PhoneVerticalMargin}">
+                            <Grid Width="435" Margin="5,0,0,0">
+                                <!-- 列定義 -->
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- 左のカラーバー -->
+                                <Rectangle
+                                    Grid.Column="0"
+                                    Fill="{Binding AccentColor, Converter={StaticResource ColorCodeToSolidColorBrushConverter}}"
+                                    />
+
+                                <!-- 背景色 -->
+                                <Rectangle
+                                    Grid.Column="1"
+                                    Fill="{Binding FeedGroupAccentColor, Converter={StaticResource ColorCodeToSolidColorBrushConverter}}"
+                                    Opacity="0.15"
+                                    />
+
+                                <!-- チャンネル -->
+                                <StackPanel Grid.Column="1">
+                                    <!-- グループ名 -->
+                                    <TextBlock
+                                        TextAlignment="Left"
+                                        VerticalAlignment="Bottom"
+                                        TextWrapping="Wrap"
+                                        Text="{Binding FeedGroupTitle}"
+                                        Style="{StaticResource PhoneTextSubtleStyle}"
+                                        />
+
+                                    <!-- チャンネル著者名+アイテム日時 -->
+                                    <StackPanel Orientation="Horizontal">
+                                        <!-- チャンネル著者名 -->
+                                        <TextBlock
+                                            Width="260"
+                                            TextAlignment="Left"
+                                            VerticalAlignment="Bottom"
+                                            TextWrapping="Wrap"
+                                            Text="{Binding FeedChannelAuthorName}"
+                                            Style="{StaticResource PhoneTextNormalStyle}"
+                                            />
+
+                                        <!-- アイテム日時 -->
+                                        <TextBlock
+                                            Width="117"
+                                            FontSize="13"
+                                            TextAlignment="Right"
+                                            VerticalAlignment="Bottom"
+                                            TextWrapping="NoWrap"
+                                            Text="{Binding PublishedAt, Converter={StaticResource DateTimeToTimelineFormatStringConverter}}"
+                                            Style="{StaticResource PhoneTextSubtleStyle}"
+                                            />
+                                    </StackPanel>
+
+                                    <!-- アイテム -->
+                                    <Grid Margin="0,10,0,10">
+                                        <!-- 列定義 -->
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="145"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- アイテム画像 -->
+                                        <Image
+                                            Grid.Column="0"
+                                            Margin="5,0,0,0"
+                                            Width="140"
+                                            Height="140"
+                                            >
+                                            <Image.Source>
+                                                <BitmapImage UriSource="{Binding Images.[0]}"/>
+                                            </Image.Source>
+                                        </Image>
+
+                                        <!-- アイテムタイトル -->
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            FontSize="32"
+                                            TextAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            TextWrapping="Wrap"
+                                            Text="{Binding Title}"
+                                            Style="{StaticResource PhoneTextNormalStyle}"
+                                            />
+                                    </Grid>
+
+                                    <!-- チャンネルタイトル -->
+                                    <TextBlock
+                                        FontSize="13"
+                                        TextAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        TextWrapping="Wrap"
+                                        Text="{Binding FeedChannelTitle}"
+                                        Style="{StaticResource PhoneTextSubtleStyle}"
+                                        />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </helpers:ResourceDataTemplateSelector.Resources>
+            </helpers:ResourceDataTemplateSelector>
+        </DataTemplate>
+
+        <!-- まとめ記事リスト:アイテム -->
+        <DataTemplate x:Key="MatomeFeedItemItemTemplate">
+            <helpers:ResourceDataTemplateSelector Content="{Binding}">
+                <helpers:ResourceDataTemplateSelector.Resources>
+                    <!-- 標準アイテム -->
+                    <DataTemplate x:Key="FeedItemNormalTemplate">
+                        <!-- アイテム -->
+                        <Grid Margin="{StaticResource PhoneVerticalMargin}">
+                            <Grid Width="435" Margin="5,20,0,0">
+                                <!-- 列定義 -->
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- チャンネル -->
+                                <StackPanel Grid.Column="1">
+                                    <!-- チャンネル著者名+アイテム日時 -->
+                                    <StackPanel Orientation="Horizontal">
+                                        <!-- チャンネル著者名 -->
+                                        <TextBlock
+                                            Width="260"
+                                            TextAlignment="Left"
+                                            VerticalAlignment="Bottom"
+                                            TextWrapping="Wrap"
+                                            Text="{Binding FeedChannelAuthorName}"
+                                            Style="{StaticResource PhoneTextNormalStyle}"
+                                            />
+
+                                        <!-- アイテム日時 -->
+                                        <TextBlock
+                                            Width="117"
+                                            FontSize="13"
+                                            TextAlignment="Right"
+                                            VerticalAlignment="Bottom"
+                                            TextWrapping="NoWrap"
+                                            Text="{Binding PublishedAt, Converter={StaticResource DateTimeToTimelineFormatStringConverter}}"
+                                            Style="{StaticResource PhoneTextSubtleStyle}"
+                                            />
+                                    </StackPanel>
+
+                                    <!-- アイテム -->
+                                    <Grid Margin="0,10,0,10">
+                                        <!-- アイテムタイトル -->
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            FontSize="32"
+                                            TextAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            TextWrapping="Wrap"
+                                            Text="{Binding Title}"
+                                            Style="{StaticResource PhoneTextNormalStyle}"
+                                            />
+                                    </Grid>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+
+                    <!-- 画像付きアイテム -->
+                    <DataTemplate x:Key="FeedItemImageTemplate">
+                        <!-- アイテム -->
+                        <Grid Margin="{StaticResource PhoneVerticalMargin}">
+                            <Grid Width="435" Margin="5,20,0,0">
+                                <!-- 列定義 -->
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- チャンネル -->
+                                <StackPanel Grid.Column="1">
+                                    <!-- チャンネル著者名+アイテム日時 -->
+                                    <StackPanel Orientation="Horizontal">
+                                        <!-- チャンネル著者名 -->
+                                        <TextBlock
+                                            Width="260"
+                                            TextAlignment="Left"
+                                            VerticalAlignment="Bottom"
+                                            TextWrapping="Wrap"
+                                            Text="{Binding FeedChannelTitle}"
+                                            Style="{StaticResource PhoneTextNormalStyle}"
+                                            />
+
+                                        <!-- アイテム日時 -->
+                                        <TextBlock
+                                            Width="117"
+                                            FontSize="13"
+                                            TextAlignment="Right"
+                                            VerticalAlignment="Bottom"
+                                            TextWrapping="NoWrap"
+                                            Text="{Binding PublishedAt, Converter={StaticResource DateTimeToTimelineFormatStringConverter}}"
+                                            Style="{StaticResource PhoneTextSubtleStyle}"
+                                            />
+                                    </StackPanel>
+
+                                    <!-- アイテム -->
+                                    <Grid Margin="0,10,0,10">
+                                        <!-- 列定義 -->
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="145"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- アイテム画像 -->
+                                        <Image
+                                            Grid.Column="0"
+                                            Margin="5,0,0,0"
+                                            Width="140"
+                                            Height="140"
+                                            >
+                                            <Image.Source>
+                                                <BitmapImage UriSource="{Binding Images.[0]}"/>
+                                            </Image.Source>
+                                        </Image>
+
+                                        <!-- アイテムタイトル -->
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            FontSize="30"
+                                            TextAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            TextWrapping="Wrap"
+                                            Text="{Binding Title}"
+                                            Style="{StaticResource PhoneTextNormalStyle}"
+                                            />
+                                    </Grid>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </helpers:ResourceDataTemplateSelector.Resources>
+            </helpers:ResourceDataTemplateSelector>
+        </DataTemplate>
         
     </Application.Resources>
 
