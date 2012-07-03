@@ -9,6 +9,10 @@ namespace AKBMatome.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value == null)
+            {
+                return Visibility.Collapsed;
+            }
             if (value is bool)
             {
                 return ((bool)value ? Visibility.Visible : Visibility.Collapsed);
@@ -26,6 +30,10 @@ namespace AKBMatome.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value == null)
+            {
+                return Visibility.Collapsed;
+            }
             if (value is bool)
             {
                 return ((bool)value ? Visibility.Collapsed : Visibility.Visible);
