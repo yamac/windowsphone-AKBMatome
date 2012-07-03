@@ -72,18 +72,103 @@
                 x:Name="TheListSelector"
                 Background="Transparent"
                 ItemsSource="{Binding FeedChannels}"
-                IsFlatList="True"
                 IsBouncy="True"
+                GroupViewOpened="TheListSelector_GroupViewOpened"
+                GroupViewClosing="TheListSelector_GroupViewClosing"
                 >
                 <!-- 記事リスト:トリガー -->
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
                         <i:InvokeCommandAction
-                            Command="{Binding FeedChannelSelectionChangedCommand}"
+                            Command="{Binding ListSelectionChangedCommand}"
                             CommandParameter="{Binding ElementName=TheListSelector}"
                             />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
+
+                <!-- 記事リスト:フッター読み込み中 -->
+                <toolkit:LongListSelector.ListFooterTemplate>
+                    <DataTemplate>
+                        <Grid
+                            Height="32"
+                            Margin="{StaticResource PhoneVerticalMargin}"
+                            >
+                            <!-- 読み込み中文言+ローディングインジケーター -->
+                            <StackPanel
+                                Margin="12,0,12,0"
+                                Orientation="Vertical"
+                                Visibility="{Binding DataContext.IsBusy,ElementName=TheListSelector,Converter={StaticResource BooleanToVisibilityConverter}}"
+                                >
+                                <!-- 読み込み中文言 -->
+                                <TextBlock
+                                    Text="{Binding Path=Resources.Common_Loading, Source={StaticResource LocalizedResources}}"
+                                    Style="{StaticResource PhoneTextSubtleStyle}"
+                                    Foreground="#FF57BA"
+                                    />
+
+                                <!-- ローディングインジケーター -->
+                                <toolkit:PerformanceProgressBar
+                                    Grid.Row="0"
+                                    Foreground="#FF57BA"
+                                    Height="4"
+                                    VerticalAlignment="Top"
+                                    IsIndeterminate="True"
+                                    />
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </toolkit:LongListSelector.ListFooterTemplate>
+                
+                <!-- チャンネルリスト:グループアイテム -->
+                <toolkit:LongListSelector.GroupItemTemplate>
+                    <DataTemplate>
+                        <ListBoxItem>
+                            <ListBoxItem.Projection>
+                                <PlaneProjection RotationX="-60"/>
+                            </ListBoxItem.Projection>
+                            <Border
+                                Width="442"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Background="{Binding Key.AccentColor, Converter={StaticResource ColorCodeToSolidColorBrushConverter}}"
+                                Margin="6"
+                                Padding="12,0,0,0"
+                                toolkit:TiltEffect.SuppressTilt="False"
+                                toolkit:TiltEffect.IsTiltEnabled="True"
+                                >
+                                <TextBlock
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding Key.Title}"
+                                    Foreground="#FFFFFF"
+                                    Style="{StaticResource PhoneTextExtraLargeStyle}"
+                                    />
+                            </Border>
+                        </ListBoxItem>
+                    </DataTemplate>
+                </toolkit:LongListSelector.GroupItemTemplate>
+
+                <!-- チャンネルリスト:グループヘッダー -->
+                <toolkit:LongListSelector.GroupHeaderTemplate>
+                    <DataTemplate>
+                        <Border
+                            Width="442"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Background="{Binding Key.AccentColor, Converter={StaticResource ColorCodeToSolidColorBrushConverter}}"
+                            Margin="6"
+                            Padding="12,0,0,0"
+                            >
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Text="{Binding Key.Title}"
+                                Foreground="#FFFFFF"
+                                Style="{StaticResource PhoneTextExtraLargeStyle}"
+                                />
+                        </Border>
+                    </DataTemplate>
+                </toolkit:LongListSelector.GroupHeaderTemplate>
 
                 <!-- チャンネルリスト:アイテム -->
                 <toolkit:LongListSelector.ItemTemplate>
@@ -111,6 +196,13 @@
                                 <Rectangle
                                     Grid.Column="1"
                                     Fill="{Binding AccentColor, Converter={StaticResource ColorCodeToSolidColorBrushConverter}}"
+                                    />
+
+                                <!-- 背景色 -->
+                                <Rectangle
+                                    Grid.Column="2"
+                                    Fill="{Binding FeedGroup.AccentColor, Converter={StaticResource ColorCodeToSolidColorBrushConverter}}"
+                                    Opacity="0.15"
                                     />
 
                                 <!-- チャンネル -->

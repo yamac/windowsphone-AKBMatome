@@ -14,7 +14,7 @@
     xmlns:helpers="clr-namespace:Helpers"
     xmlns:sampleData="clr-namespace:AKBMatome.SampleData"
     xmlns:converters="clr-namespace:AKBMatome.Converters"
-    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="728"
+    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="800"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
@@ -77,15 +77,23 @@
         <!-- コンテンツ -->
         <ScrollViewer x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <StackPanel>
-                <!-- チャンネル著者名 -->
-                <Grid Margin="{StaticResource PhoneMargin}">
+                <!-- グループ名+チャンネル著者名 -->
+                <StackPanel Margin="{StaticResource PhoneMargin}">
+                    <!-- グループ名 -->
+                    <TextBlock
+                        Style="{StaticResource PhoneTextSubtleStyle}"
+                        TextWrapping="Wrap"
+                        Text="{Binding TheFeedChannel.FeedGroup.Title}"
+                        />
+
+                    <!-- チャンネル著者名 -->
                     <TextBlock
                         Style="{StaticResource PhoneTextLargeStyle}"
                         FontSize="36"
                         TextWrapping="Wrap"
                         Text="{Binding TheFeedChannel.AuthorName}"
                         />
-                </Grid>
+                </StackPanel>
 
                 <!-- 推しメン -->
                 <Grid Margin="{StaticResource PhoneMargin}">
