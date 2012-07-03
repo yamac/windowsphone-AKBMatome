@@ -23,12 +23,10 @@
     shell:SystemTray.IsVisible="False"
     toolkit:TiltEffect.IsTiltEnabled="True"
     DataContext="{Binding Source={StaticResource Locator}, Path=MainPageViewModel}"
-    d:DataContext="{Binding Source={StaticResource SampleData}}"
     >
 
     <!-- リソース -->
     <phone:PhoneApplicationPage.Resources>
-        <sampleData:MainPageSampleData x:Key="SampleData"/>
     </phone:PhoneApplicationPage.Resources>
 
     <!-- ページ切り替え効果 -->
@@ -55,6 +53,11 @@
 
     <!-- ルート -->
     <Grid x:Name="LayoutRoot" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
         <!-- ローディングインジケーター -->
         <toolkit:PerformanceProgressBar
             Foreground="#FF57BA"
@@ -63,12 +66,17 @@
             IsIndeterminate="{Binding IsBusy, Mode=TwoWay}"
             />
 
+        <!-- ヘッダー -->
+        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,0">
+            <TextBlock x:Name="PageHeaderTitle" Text="{Binding Path=Resources.MainPage_PageHeaderTitle, Source={StaticResource LocalizedResources}}" Style="{StaticResource PhoneTextNormalStyle}" FontWeight="Bold" Foreground="#FF57BA"/>
+        </StackPanel>
+        
         <!-- ピボット -->
         <controls:Pivot
+            Visibility="{Binding IsInitializing, Converter={StaticResource BooleanToInverseVisibilityConverter}}"
             x:Name="ThePivot"
-            Title="{Binding Path=Resources.MainPage_PivotTitle, Source={StaticResource LocalizedResources}}"
-            ItemsSource="{Binding PivotItems}"
-            SelectedIndex="{Binding PivotItemSelectedIndex, Mode=TwoWay}"
+            Grid.Row="1"
+            Margin="0,-10,0,0"
             >
 
             <!-- ピボット:トリガー -->
@@ -81,16 +89,6 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
 
-            <!-- ピボット:タイトル -->
-            <controls:Pivot.TitleTemplate>
-                <DataTemplate>
-                    <TextBlock
-                        Foreground="#FF57BA"
-                        Text="{Binding}"
-                        />
-                </DataTemplate>
-            </controls:Pivot.TitleTemplate>
-            
             <!-- ピボット:ヘッダー -->
             <controls:Pivot.HeaderTemplate>
                 <DataTemplate>
@@ -102,7 +100,7 @@
                             Width="40"
                             Height="40"
                             Source="/Resources/Icons/OshiMem.png"
-                            Visibility="{Binding IsOshiMem, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Visibility="{Binding IsOshimem, Converter={StaticResource BooleanToVisibilityConverter}}"
                             />
                         <TextBlock
                             Foreground="#FF57BA"
@@ -114,288 +112,259 @@
                     </StackPanel>
                 </DataTemplate>
             </controls:Pivot.HeaderTemplate>
-            
-            <!-- ピボット:アイテム -->
-            <controls:Pivot.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <!-- 記事リスト -->
-                        <toolkit:LongListSelector
-                            x:Name="TheListSelector"
-                            Background="Transparent"
-                            ItemsSource="{Binding FeedItems}"
-                            IsFlatList="True"
-                            IsBouncy="True"
-                            ShowListFooter="{Binding HasNextPage}"
-                            Visibility="{Binding HasMember, Converter={StaticResource BooleanToVisibilityConverter}}"
-                            >
-                            <!-- 記事リスト:トリガー -->
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="SelectionChanged">
-                                    <i:InvokeCommandAction
-                                        Command="{Binding TheListSelectorSelectionChangedCommand}"
-                                        CommandParameter="{Binding ElementName=TheListSelector}"
-                                        />
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="StretchingBottom">
-                                    <mvvm:EventToCommand
-                                        Command="{Binding TheListSelectorStretchingBottomCommand}"
-                                        />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
 
-                            <!-- 記事リスト:フッター読み込み中 -->
-                            <toolkit:LongListSelector.ListFooterTemplate>
-                                <DataTemplate>
-                                    <Grid
-                                        Height="32"
-                                        Margin="{StaticResource PhoneVerticalMargin}"
+
+            <!-- ピボット:推しメン -->
+            <controls:PivotItem
+                Header="{Binding}"
+                DataContext="{Binding OshimemChannelsUpdatesListViewModel}"
+                >
+                <Grid>
+                    <!-- メンバーがゼロの場合の代替表示 -->
+                    <Grid Visibility="{Binding HasMember, Converter={StaticResource BooleanToInverseVisibilityConverter}}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="48"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel
+                            Grid.Row="0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            >
+                            <TextBlock
+                                Width="Auto"
+                                Foreground="#FF57BA"
+                                Margin="9,0,0,0"
+                                Style="{StaticResource PhoneTextNormalStyle}"
+                                TextWrapping="Wrap"
+                                Text="{Binding Path=Resources.MainPage_TipsForNoOshimems, Source={StaticResource LocalizedResources}}"
+                                >
+                            </TextBlock>
+                        </StackPanel>
+                        <Image
+                            Grid.Row="1"
+                            Width="48"
+                            Height="48"
+                            HorizontalAlignment="Right"
+                            Source="/Resources/Icons/DownAllow.png"
+                            />
+                    </Grid>
+                
+                    <!-- 記事リスト -->
+                    <toolkit:LongListSelector
+                        Visibility="{Binding HasMember, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        x:Name="OshimemChannelsUpdatesList"
+                        Background="Transparent"
+                        ItemsSource="{Binding FeedItems}"
+                        IsFlatList="True"
+                        IsBouncy="True"
+                        ShowListFooter="True"
+                        ItemTemplate="{StaticResource MemberFeedItemItemTemplate}"
+                        >
+                        <!-- 記事リスト:トリガー -->
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction
+                                    Command="{Binding ListSelectionChangedCommand}"
+                                    CommandParameter="{Binding ElementName=OshimemChannelsUpdatesList}"
+                                    />
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="StretchingBottom">
+                                <mvvm:EventToCommand
+                                    Command="{Binding ListStretchingBottomCommand}"
+                                    />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+
+                        <!-- 記事リスト:フッター読み込み中 -->
+                        <toolkit:LongListSelector.ListFooterTemplate>
+                            <DataTemplate>
+                                <!-- LongListSelector.ListFooterTemplateがDataContextを引き継がないのでこでセットするしかない回避策 -->
+                                <Grid Height="32" Margin="{StaticResource PhoneVerticalMargin}" DataContext="{Binding DataContext, ElementName=OshimemChannelsUpdatesList}">
+                                    <!-- 読み込み中文言+ローディングインジケーター -->
+                                    <StackPanel
+                                        Margin="12,0,12,0"
+                                        Orientation="Vertical"
+                                        Visibility="{Binding IsBusy,Converter={StaticResource BooleanToVisibilityConverter}}"
                                         >
-                                        <!-- 読み込み中文言+ローディングインジケーター -->
-                                        <StackPanel
-                                            Margin="12,0,12,0"
-                                            Orientation="Vertical"
-                                            Visibility="{Binding DataContext.IsBusy,ElementName=TheListSelector,Converter={StaticResource BooleanToVisibilityConverter}}"
-                                            >
-                                            <!-- 読み込み中文言 -->
-                                            <TextBlock
-                                                Text="{Binding Path=Resources.Common_Loading, Source={StaticResource LocalizedResources}}"
-                                                Style="{StaticResource PhoneTextSubtleStyle}"
-                                                Foreground="#FF57BA"
-                                                />
+                                        <!-- 読み込み中文言 -->
+                                        <TextBlock
+                                            Text="{Binding Path=Resources.Common_Loading, Source={StaticResource LocalizedResources}}"
+                                            Style="{StaticResource PhoneTextSubtleStyle}"
+                                            Foreground="#FF3399"
+                                            />
 
-                                            <!-- ローディングインジケーター -->
-                                            <toolkit:PerformanceProgressBar
-                                                Grid.Row="0"
-                                                Foreground="#FF57BA"
-                                                Height="4"
-                                                VerticalAlignment="Top"
-                                                IsIndeterminate="True"
-                                                />
-                                        </StackPanel>
-                                    </Grid>
-                                </DataTemplate>
-                            </toolkit:LongListSelector.ListFooterTemplate>
-                            
-                            <!-- 記事リスト:アイテム -->
-                            <toolkit:LongListSelector.ItemTemplate>
-                                <DataTemplate>
-                                    <helpers:ResourceDataTemplateSelector Content="{Binding}">
-                                        <helpers:ResourceDataTemplateSelector.Resources>
-                                            <!-- 標準アイテム -->
-                                            <DataTemplate x:Key="FeedItemNormalTemplate">
-                                                <!-- アイテム -->
-                                                <Grid Margin="{StaticResource PhoneVerticalMargin}">
-                                                    <Grid Width="435" Margin="5,0,0,0">
-                                                        <!-- 列定義 -->
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="10"/>
-                                                            <ColumnDefinition Width="*"/>
-                                                        </Grid.ColumnDefinitions>
+                                        <!-- ローディングインジケーター -->
+                                        <toolkit:PerformanceProgressBar
+                                            Grid.Row="0"
+                                            Foreground="#FF3399"
+                                            Height="4"
+                                            VerticalAlignment="Top"
+                                            IsIndeterminate="True"
+                                            />
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </toolkit:LongListSelector.ListFooterTemplate>
+                    </toolkit:LongListSelector>
+                </Grid>
+            </controls:PivotItem>
 
-                                                        <!-- 左のカラーバー -->
-                                                        <Rectangle
-                                                            Grid.Column="0"
-                                                            Fill="{Binding AccentColor, Converter={StaticResource ColorCodeToSolidColorBrushConverter}}"
-                                                            />
-
-                                                        <!-- チャンネル -->
-                                                        <StackPanel
-                                                            Grid.Column="1"
-                                                            >
-                                                            <!-- チャンネル著者名+アイテム日時 -->
-                                                            <StackPanel
-                                                                Orientation="Horizontal"
-                                                                >
-                                                                <!-- チャンネル著者名 -->
-                                                                <TextBlock
-                                                                    Width="260"
-                                                                    TextAlignment="Left"
-                                                                    VerticalAlignment="Bottom"
-                                                                    TextWrapping="Wrap"
-                                                                    Text="{Binding FeedChannelAuthorName}"
-                                                                    Style="{StaticResource PhoneTextNormalStyle}"
-                                                                    />
-
-                                                                <!-- アイテム日時 -->
-                                                                <TextBlock
-                                                                    Width="117"
-                                                                    FontSize="13"
-                                                                    TextAlignment="Right"
-                                                                    VerticalAlignment="Bottom"
-                                                                    TextWrapping="NoWrap"
-                                                                    Text="{Binding PublishedAt, Converter={StaticResource DateTimeToTimelineFormatStringConverter}}"
-                                                                    Style="{StaticResource PhoneTextSubtleStyle}"
-                                                                    />
-                                                            </StackPanel>
-
-                                                            <!-- アイテム -->
-                                                            <Grid Margin="0,10,0,10">
-                                                                <!-- アイテムタイトル -->
-                                                                <TextBlock
-                                                                    Grid.Column="1"
-                                                                    FontSize="32"
-                                                                    TextAlignment="Left"
-                                                                    VerticalAlignment="Top"
-                                                                    TextWrapping="Wrap"
-                                                                    Text="{Binding Title}"
-                                                                    Style="{StaticResource PhoneTextNormalStyle}"
-                                                                    />
-                                                            </Grid>
-
-                                                            <!-- チャンネルタイトル -->
-                                                            <TextBlock
-                                                                FontSize="13"
-                                                                TextAlignment="Right"
-                                                                VerticalAlignment="Center"
-                                                                TextWrapping="Wrap"
-                                                                Text="{Binding FeedChannelTitle}"
-                                                                Style="{StaticResource PhoneTextSubtleStyle}"
-                                                                />
-                                                        </StackPanel>
-                                                    </Grid>
-                                                </Grid>
-                                            </DataTemplate>
-
-                                            <!-- 画像付きアイテム -->
-                                            <DataTemplate x:Key="FeedItemImageTemplate">
-                                                <!-- アイテム -->
-                                                <Grid Margin="{StaticResource PhoneVerticalMargin}">
-                                                    <Grid Width="435" Margin="5,0,0,0">
-                                                        <!-- 列定義 -->
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="10"/>
-                                                            <ColumnDefinition Width="*"/>
-                                                        </Grid.ColumnDefinitions>
-
-                                                        <!-- 左のカラーバー -->
-                                                        <Rectangle
-                                                            Grid.Column="0"
-                                                            Fill="{Binding AccentColor, Converter={StaticResource ColorCodeToSolidColorBrushConverter}}"
-                                                            />
-
-                                                        <!-- チャンネル -->
-                                                        <StackPanel
-                                                            Grid.Column="1"
-                                                            >
-                                                            <!-- チャンネル著者名+アイテム日時 -->
-                                                            <StackPanel
-                                                                Orientation="Horizontal"
-                                                                >
-                                                                <!-- チャンネル著者名 -->
-                                                                <TextBlock
-                                                                    Width="260"
-                                                                    TextAlignment="Left"
-                                                                    VerticalAlignment="Bottom"
-                                                                    TextWrapping="Wrap"
-                                                                    Text="{Binding FeedChannelAuthorName}"
-                                                                    Style="{StaticResource PhoneTextNormalStyle}"
-                                                                    />
-
-                                                                <!-- アイテム日時 -->
-                                                                <TextBlock
-                                                                    Width="117"
-                                                                    FontSize="13"
-                                                                    TextAlignment="Right"
-                                                                    VerticalAlignment="Bottom"
-                                                                    TextWrapping="NoWrap"
-                                                                    Text="{Binding PublishedAt, Converter={StaticResource DateTimeToTimelineFormatStringConverter}}"
-                                                                    Style="{StaticResource PhoneTextSubtleStyle}"
-                                                                    />
-                                                            </StackPanel>
-
-                                                            <!-- アイテム -->
-                                                            <Grid Margin="0,10,0,10">
-                                                                <!-- 列定義 -->
-                                                                <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition Width="145"/>
-                                                                    <ColumnDefinition Width="*"/>
-                                                                </Grid.ColumnDefinitions>
-
-                                                                <!-- アイテム画像 -->
-                                                                <Image
-                                                                    Grid.Column="0"
-                                                                    Margin="5,0,0,0"
-                                                                    Width="140"
-                                                                    Height="140"
-                                                                    >
-                                                                    <Image.Source>
-                                                                        <!--
-                                                                        <BitmapImage UriSource="{Binding Images.[0]}" CreateOptions="BackgroundCreation"/>
-                                                                        -->
-                                                                        <BitmapImage UriSource="{Binding Images.[0]}"/>
-                                                                    </Image.Source>
-                                                                </Image>
-
-                                                                <!-- アイテムタイトル -->
-                                                                <TextBlock
-                                                                    Grid.Column="1"
-                                                                    FontSize="32"
-                                                                    TextAlignment="Left"
-                                                                    VerticalAlignment="Top"
-                                                                    TextWrapping="Wrap"
-                                                                    Text="{Binding Title}"
-                                                                    Style="{StaticResource PhoneTextNormalStyle}"
-                                                                    />
-                                                            </Grid>
-
-                                                            <!-- チャンネルタイトル -->
-                                                            <TextBlock
-                                                                FontSize="13"
-                                                                TextAlignment="Right"
-                                                                VerticalAlignment="Center"
-                                                                TextWrapping="Wrap"
-                                                                Text="{Binding FeedChannelTitle}"
-                                                                Style="{StaticResource PhoneTextSubtleStyle}"
-                                                                />
-                                                        </StackPanel>
-                                                    </Grid>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </helpers:ResourceDataTemplateSelector.Resources>
-                                    </helpers:ResourceDataTemplateSelector>
-                                </DataTemplate>
-                            </toolkit:LongListSelector.ItemTemplate>
-                        </toolkit:LongListSelector>
-                        
-                        <!-- 推しメンがゼロの場合の代替表示 -->
-                        <Grid
-                            Visibility="{Binding HasMember, Converter={StaticResource BooleanToInverseVisibilityConverter}}"
-                            >
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="48"/>
-                            </Grid.RowDefinitions>
-                            <StackPanel
+            <!-- ピボット:メンバー -->
+            <controls:PivotItem
+                Header="{Binding}"
+                DataContext="{Binding MemberChannelsUpdatesListViewModel}"
+                >
+                <Grid>
+                    <!-- メンバーがゼロの場合の代替表示 -->
+                    <Grid Visibility="{Binding HasMember, Converter={StaticResource BooleanToInverseVisibilityConverter}}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="48"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel
                                 Grid.Row="0"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 >
-                                <TextBlock
+                            <TextBlock
                                     Width="Auto"
                                     Foreground="#FF57BA"
                                     Margin="9,0,0,0"
                                     Style="{StaticResource PhoneTextNormalStyle}"
                                     TextWrapping="Wrap"
-                                    Text="{Binding Path=Resources.MainPage_TipsForMemberInfoMenu, Source={StaticResource LocalizedResources}}"
+                                    Text="{Binding Path=Resources.MainPage_TipsForNoMembers, Source={StaticResource LocalizedResources}}"
                                     >
-                                </TextBlock>
-                            </StackPanel>
-                            <Image
-                                Grid.Row="1"
-                                Width="48"
-                                Height="48"
-                                HorizontalAlignment="Right"
-                                Source="/Resources/Icons/DownAllow.png"
-                                />
-                        </Grid>
+                            </TextBlock>
+                        </StackPanel>
                     </Grid>
-                </DataTemplate>
-            </controls:Pivot.ItemTemplate>
+                
+                    <!-- 記事リスト -->
+                    <toolkit:LongListSelector
+                        Visibility="{Binding HasMember, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        x:Name="MemberChannelsUpdatesList"
+                        Background="Transparent"
+                        ItemsSource="{Binding FeedItems}"
+                        IsFlatList="True"
+                        IsBouncy="True"
+                        ShowListFooter="True"
+                        ItemTemplate="{StaticResource MemberFeedItemItemTemplate}"
+                        >
+                        <!-- 記事リスト:トリガー -->
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction
+                                    Command="{Binding ListSelectionChangedCommand}"
+                                    CommandParameter="{Binding ElementName=MemberChannelsUpdatesList}"
+                                    />
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="StretchingBottom">
+                                <mvvm:EventToCommand
+                                    Command="{Binding ListStretchingBottomCommand}"
+                                    />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+
+                        <!-- 記事リスト:フッター読み込み中 -->
+                        <toolkit:LongListSelector.ListFooterTemplate>
+                            <DataTemplate>
+                                <!-- LongListSelector.ListFooterTemplateがDataContextを引き継がないのでこでセットするしかない回避策 -->
+                                <Grid Height="32" Margin="{StaticResource PhoneVerticalMargin}" DataContext="{Binding DataContext, ElementName=MemberChannelsUpdatesList}">
+                                    <!-- 読み込み中文言+ローディングインジケーター -->
+                                    <StackPanel
+                                        Margin="12,0,12,0"
+                                        Orientation="Vertical"
+                                        Visibility="{Binding IsBusy,Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        >
+                                        <!-- 読み込み中文言 -->
+                                        <TextBlock
+                                            Text="{Binding Path=Resources.Common_Loading, Source={StaticResource LocalizedResources}}"
+                                            Style="{StaticResource PhoneTextSubtleStyle}"
+                                            Foreground="#FF3399"
+                                            />
+
+                                        <!-- ローディングインジケーター -->
+                                        <toolkit:PerformanceProgressBar
+                                            Grid.Row="0"
+                                            Foreground="#FF3399"
+                                            Height="4"
+                                            VerticalAlignment="Top"
+                                            IsIndeterminate="True"
+                                            />
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </toolkit:LongListSelector.ListFooterTemplate>
+                    </toolkit:LongListSelector>
+                </Grid>
+            </controls:PivotItem>
+
+            <!-- ピボット:まとめ -->
+            <controls:PivotItem
+                Header="{Binding}"
+                DataContext="{Binding MatomeChannelsUpdatesListViewModel}"
+                >
+                <!-- 記事リスト -->
+                <toolkit:LongListSelector
+                    x:Name="MatomeChannelsUpdatesList"
+                    Background="Transparent"
+                    ItemsSource="{Binding FeedItems}"
+                    IsFlatList="True"
+                    IsBouncy="True"
+                    ShowListFooter="True"
+                    ItemTemplate="{StaticResource MatomeFeedItemItemTemplate}"
+                    >
+                    <!-- 記事リスト:トリガー -->
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction
+                                Command="{Binding ListSelectionChangedCommand}"
+                                CommandParameter="{Binding ElementName=MatomeChannelsUpdatesList}"
+                                />
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="StretchingBottom">
+                            <mvvm:EventToCommand
+                                Command="{Binding ListStretchingBottomCommand}"
+                                />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+
+                    <!-- 記事リスト:フッター読み込み中 -->
+                    <toolkit:LongListSelector.ListFooterTemplate>
+                        <DataTemplate>
+                            <!-- LongListSelector.ListFooterTemplateがDataContextを引き継がないのでこでセットするしかない回避策 -->
+                            <Grid Height="32" Margin="{StaticResource PhoneVerticalMargin}" DataContext="{Binding DataContext, ElementName=MatomeChannelsUpdatesList}">
+                                <!-- 読み込み中文言+ローディングインジケーター -->
+                                <StackPanel
+                                    Margin="12,0,12,0"
+                                    Orientation="Vertical"
+                                    Visibility="{Binding IsBusy,Converter={StaticResource BooleanToVisibilityConverter}}"
+                                    >
+                                    <!-- 読み込み中文言 -->
+                                    <TextBlock
+                                        Text="{Binding Path=Resources.Common_Loading, Source={StaticResource LocalizedResources}}"
+                                        Style="{StaticResource PhoneTextSubtleStyle}"
+                                        Foreground="#FF3399"
+                                        />
+
+                                    <!-- ローディングインジケーター -->
+                                    <toolkit:PerformanceProgressBar
+                                        Grid.Row="0"
+                                        Foreground="#FF3399"
+                                        Height="4"
+                                        VerticalAlignment="Top"
+                                        IsIndeterminate="True"
+                                        />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:LongListSelector.ListFooterTemplate>
+                </toolkit:LongListSelector>
+            </controls:PivotItem>
         </controls:Pivot>
 
         <!-- アプリケーションバー -->
-        <helpers:BindableApplicationBar IsVisible="True" IsMenuEnabled="True" Mode="Minimized" Margin="-140,135,140,-135">
+        <helpers:BindableApplicationBar IsVisible="True" IsMenuEnabled="True" Mode="Minimized">
             <helpers:BindableApplicationBarMenuItem Text="{Binding Path=Resources.Common_AppBar_MenuItemText_Refresh, Source={StaticResource LocalizedResources}}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
@@ -403,6 +372,13 @@
                             Command="{Binding RefreshCommand}"
                             CommandParameter="{Binding ElementName=ThePivot}"
                             />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </helpers:BindableApplicationBarMenuItem>
+            <helpers:BindableApplicationBarMenuItem Text="{Binding Path=Resources.MainPage_AppBar_MenuItemText_GroupInformation, Source={StaticResource LocalizedResources}}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <ic:NavigateToPageAction TargetPage="/Views/GroupListPage.xaml"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </helpers:BindableApplicationBarMenuItem>
