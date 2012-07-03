@@ -21,7 +21,7 @@ namespace AKBMatome.SampleData
     {
         public string Title
         {
-            get { return Localization.AppResources.MainPage_Oshimems;/*"推しメン";*/ }
+            get { return "";/*"推しメン";*/ }
         }
 
         public bool HasMember
@@ -43,6 +43,8 @@ namespace AKBMatome.SampleData
         {
             new FeedItem
             {
+                FeedGroupTitle = "Group Title",
+                FeedGroupAccentColor = int.Parse("FFF09609", System.Globalization.NumberStyles.HexNumber),
                 FeedChannelAuthorName = "Author Author Author Author Author Author",
                 FeedChannelTitle = "Title Title Title Title Title Title",
                 Title = "Title Title Title Title Title Title",
@@ -52,6 +54,8 @@ namespace AKBMatome.SampleData
             },
             new FeedItem
             {
+                FeedGroupTitle = "Group Title",
+                FeedGroupAccentColor = int.Parse("FFF09609", System.Globalization.NumberStyles.HexNumber),
                 FeedChannelAuthorName = "Author Author",
                 FeedChannelTitle = "Title Title Title Title Title Title",
                 Title = "Title Title Title Title Title Title",
@@ -61,6 +65,8 @@ namespace AKBMatome.SampleData
             /*
             new FeedItem
             {
+                FeedGroupTitle = "Group Title",
+                FeedGroupAccentColor = int.Parse("FFF09609", System.Globalization.NumberStyles.HexNumber),
                 FeedChannelAuthorName = "Author Author",
                 FeedChannelTitle = "Title Title Title Title Title Title",
                 Title = "Title Title Title Title Title Title",
@@ -70,6 +76,8 @@ namespace AKBMatome.SampleData
             },
             new FeedItem
             {
+                FeedGroupTitle = "Group Title",
+                FeedGroupAccentColor = int.Parse("FFF09609", System.Globalization.NumberStyles.HexNumber),
                 FeedChannelAuthorName = "Author Author",
                 FeedChannelTitle = "Title Title Title Title Title Title",
                 Title = "Title Title Title Title Title Title",
