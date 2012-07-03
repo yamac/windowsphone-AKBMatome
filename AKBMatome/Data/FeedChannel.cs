@@ -16,7 +16,7 @@ namespace AKBMatome.Data
 
         private int _Id;
         [DataMember(Name = "id")]
-        [Column(IsPrimaryKey = true, IsDbGenerated = false, DbType = "INT NOT NULL", CanBeNull = false)]
+        [Column(IsPrimaryKey = true, IsDbGenerated = false, CanBeNull = false)]
         public int Id
         {
             get { return _Id; }
@@ -40,6 +40,14 @@ namespace AKBMatome.Data
                 _FeedGroupId = value;
                 NotifyPropertyChanged(m => FeedGroupId);
             }
+        }
+
+        private EntityRef<FeedGroup> _FeedGroup;
+        [Association(Storage = "_FeedGroup", ThisKey = "FeedGroupId", OtherKey = "Id")]
+        public FeedGroup FeedGroup
+        {
+            get { return _FeedGroup.Entity; }
+            set { _FeedGroup.Entity = value; }
         }
 
         private string _FeedLink;
@@ -107,7 +115,7 @@ namespace AKBMatome.Data
             {
                 if (_AccentColor == value) return;
                 _AccentColor = value;
-                this.NotifyPropertyChanged(m => AccentColor, propertyChanged);
+                NotifyPropertyChanged(m => AccentColor);
             }
         }
 
@@ -120,7 +128,21 @@ namespace AKBMatome.Data
             {
                 if (_Priority == value) return;
                 _Priority = value;
-                this.NotifyPropertyChanged(m => Priority, propertyChanged);
+                NotifyPropertyChanged(m => Priority);
+            }
+        }
+
+        private int? _Status;
+        [DataMember(Name = "status")]
+        [Column]
+        public int? Status
+        {
+            get { return _Status; }
+            set
+            {
+                if (_Status == value) return;
+                _Status = value;
+                NotifyPropertyChanged(m => Status);
             }
         }
     }
