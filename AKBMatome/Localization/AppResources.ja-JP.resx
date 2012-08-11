@@ -135,12 +135,6 @@
   <data name="ChannelDetailPage_PageTitle" xml:space="preserve">
     <value>メンバー設定</value>
   </data>
-  <data name="ChannelListPage_PageHeaderTitle" xml:space="preserve">
-    <value>メンバー</value>
-  </data>
-  <data name="ChannelListPage_PageTitle" xml:space="preserve">
-    <value>メンバー情報</value>
-  </data>
   <data name="Common_AppBar_IconButtonText_Cancel" xml:space="preserve">
     <value>キャンセル</value>
   </data>
@@ -192,6 +186,15 @@
   <data name="Constants_Media_AccentColors_Teal" xml:space="preserve">
     <value>ティール</value>
   </data>
+  <data name="GroupAndChannelListPage_ChannelList_Title" xml:space="preserve">
+    <value>メンバー</value>
+  </data>
+  <data name="GroupAndChannelListPage_GroupList_Title" xml:space="preserve">
+    <value>グループ</value>
+  </data>
+  <data name="GroupAndChannelListPage_PageHeaderTitle" xml:space="preserve">
+    <value>グループ・メンバー情報</value>
+  </data>
   <data name="GroupDetailPage_PageHeaderTitle" xml:space="preserve">
     <value>グループ情報</value>
   </data>
@@ -201,20 +204,11 @@
   <data name="GroupDetailPage_SubscribeToggleSwitchHeader" xml:space="preserve">
     <value>購読</value>
   </data>
-  <data name="GroupListPage_PageHeaderTitle" xml:space="preserve">
-    <value>グループ情報</value>
-  </data>
-  <data name="GroupListPage_PageTitle" xml:space="preserve">
-    <value>グループ</value>
-  </data>
   <data name="MainPage_AppBar_MenuItemText_AboutTheApplication" xml:space="preserve">
     <value>設定</value>
   </data>
-  <data name="MainPage_AppBar_MenuItemText_GroupInformation" xml:space="preserve">
-    <value>グループ情報</value>
-  </data>
-  <data name="MainPage_AppBar_MenuItemText_MemberInformation" xml:space="preserve">
-    <value>メンバー情報</value>
+  <data name="MainPage_AppBar_MenuItemText_GroupAndChannelInformation" xml:space="preserve">
+    <value>グループ・メンバー情報</value>
   </data>
   <data name="MainPage_Error_FailedToGetAllFeedGroups" xml:space="preserve">
     <value>データを取得できませんでした。</value>
@@ -241,7 +235,7 @@
     <value>全員推しメン!?</value>
   </data>
   <data name="MainPage_TipsForNoOshimems" xml:space="preserve">
-    <value>右下の「グループ情報」「メンバー情報」で
+    <value>右下のメニュー「グループ・メンバー情報」で
 購読グループと推しメンを設定してください。</value>
   </data>
   <data name="Off" xml:space="preserve">

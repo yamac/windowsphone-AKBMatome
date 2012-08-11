@@ -11,9 +11,9 @@ namespace AKBMatome
         public static class App
         {
 #if DEBUG
-            public const int FeedChannelExpireDays = 0;
+            public const int FeedChannelExpireDays = 1;
 #else
-            public const int FeedChannelExpireDays = 30;
+            public const int FeedChannelExpireDays = 7;
 #endif
             public const int ItemsPerPage = 10;
             public const int BasePage = 1;
@@ -22,6 +22,7 @@ namespace AKBMatome
 
         public static class AppKey
         {
+            public const string Version = "Version";
             public const string LastUpdate = "LastUpdate";
             public const string NotificationConfirmation = "NotificationConfirmation";
             public const string NotificationUuid = "NotificationUuid";
@@ -29,10 +30,10 @@ namespace AKBMatome
 
         public static class MessageTokens
         {
-            public const string InitializeCompleted = "InitializeCompletedToken";
-            public const string GroupListInitializeCompleted = "GroupListInitializeCompletedToken";
+            public const string MainPageInitializeCompleted = "MainPageInitializeCompleted";
+            public const string ReloadRequested = "ReloadRequested";
+            public const string GroupAndChannelListPageInitializeCompleted = "GroupAndChannelListPageInitializeCompleted";
             public const string FeedGroupsUpdated = "FeedGroupsUpdated";
-            public const string ChannelListInitializeCompleted = "ChannelListInitializeCompletedToken";
             public const string FeedChannelsUpdated = "FeedChannelsUpdated";
             public const string NotificationUpdated = "NotificationUpdated";
         }

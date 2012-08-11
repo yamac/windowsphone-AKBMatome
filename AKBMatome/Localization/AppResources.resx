@@ -126,9 +126,6 @@
   <data name="MainPage_AppBar_MenuItemText_AboutTheApplication" xml:space="preserve">
     <value>settings</value>
   </data>
-  <data name="MainPage_AppBar_MenuItemText_MemberInformation" xml:space="preserve">
-    <value>member information</value>
-  </data>
   <data name="WebPage_AppBar_MenuItemText_OpenWithBrowser" xml:space="preserve">
     <value>open with browser</value>
   </data>
@@ -147,15 +144,12 @@
   <data name="ChannelDetailPage_MemberColorListPickerFullModeHeader" xml:space="preserve">
     <value>Member color</value>
   </data>
-  <data name="ChannelListPage_PageTitle" xml:space="preserve">
-    <value>members</value>
-  </data>
   <data name="ChannelDetailPage_OfficialBlog" xml:space="preserve">
     <value>Official blog</value>
   </data>
   <data name="MainPage_TipsForNoOshimems" xml:space="preserve">
     <value>Register your prefered group and oshimems now!
-Open 'group information' and 'member information' menu located at right bottom of your screen to configure your prefered group and oshimems.
+Open 'group and member' menu located at right bottom of your screen to configure your prefered group and oshimems.
 The word 'oshimem' means your prefered member!</value>
   </data>
   <data name="PreferencesPage_TwitterAccountForSupport" xml:space="preserve">
@@ -172,9 +166,6 @@ The word 'oshimem' means your prefered member!</value>
   </data>
   <data name="ChannelDetailPage_PageTitle" xml:space="preserve">
     <value>member settings</value>
-  </data>
-  <data name="ChannelListPage_PageHeaderTitle" xml:space="preserve">
-    <value>MEMBER INFORMATION</value>
   </data>
   <data name="Constants_Media_AccentColors_Blue" xml:space="preserve">
     <value>blue</value>
@@ -287,8 +278,8 @@ The word 'oshimem' means your prefered member!</value>
   <data name="MainPage_TipsForNoMembers" xml:space="preserve">
     <value>Are you a god?</value>
   </data>
-  <data name="MainPage_AppBar_MenuItemText_GroupInformation" xml:space="preserve">
-    <value>group information</value>
+  <data name="MainPage_AppBar_MenuItemText_GroupAndChannelInformation" xml:space="preserve">
+    <value>group and member</value>
   </data>
   <data name="GroupDetailPage_PageHeaderTitle" xml:space="preserve">
     <value>GROUP INFORMATION</value>
@@ -296,16 +287,19 @@ The word 'oshimem' means your prefered member!</value>
   <data name="GroupDetailPage_PageTitle" xml:space="preserve">
     <value>group settings</value>
   </data>
-  <data name="GroupListPage_PageHeaderTitle" xml:space="preserve">
-    <value>GROUP INFORMATION</value>
-  </data>
-  <data name="GroupListPage_PageTitle" xml:space="preserve">
-    <value>groups</value>
+  <data name="GroupAndChannelListPage_PageHeaderTitle" xml:space="preserve">
+    <value>GROUP AND MEMBER</value>
   </data>
   <data name="MainPage_Error_FailedToGetAllFeedGroups" xml:space="preserve">
     <value>Can't retrieve data.</value>
   </data>
   <data name="GroupDetailPage_SubscribeToggleSwitchHeader" xml:space="preserve">
     <value>Subscribe</value>
+  </data>
+  <data name="GroupAndChannelListPage_ChannelList_Title" xml:space="preserve">
+    <value>members</value>
+  </data>
+  <data name="GroupAndChannelListPage_GroupList_Title" xml:space="preserve">
+    <value>groups</value>
   </data>
 </root>

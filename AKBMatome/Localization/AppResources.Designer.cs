@@ -115,24 +115,6 @@ namespace AKBMatome.Localization {
         }
         
         /// <summary>
-        ///   MEMBER INFORMATION に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string ChannelListPage_PageHeaderTitle {
-            get {
-                return ResourceManager.GetString("ChannelListPage_PageHeaderTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   members に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string ChannelListPage_PageTitle {
-            get {
-                return ResourceManager.GetString("ChannelListPage_PageTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   cancel に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Common_AppBar_IconButtonText_Cancel {
@@ -286,6 +268,33 @@ namespace AKBMatome.Localization {
         }
         
         /// <summary>
+        ///   members に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string GroupAndChannelListPage_ChannelList_Title {
+            get {
+                return ResourceManager.GetString("GroupAndChannelListPage_ChannelList_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   groups に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string GroupAndChannelListPage_GroupList_Title {
+            get {
+                return ResourceManager.GetString("GroupAndChannelListPage_GroupList_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   GROUP AND MEMBER に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string GroupAndChannelListPage_PageHeaderTitle {
+            get {
+                return ResourceManager.GetString("GroupAndChannelListPage_PageHeaderTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   GROUP INFORMATION に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string GroupDetailPage_PageHeaderTitle {
@@ -313,24 +322,6 @@ namespace AKBMatome.Localization {
         }
         
         /// <summary>
-        ///   GROUP INFORMATION に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string GroupListPage_PageHeaderTitle {
-            get {
-                return ResourceManager.GetString("GroupListPage_PageHeaderTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   groups に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string GroupListPage_PageTitle {
-            get {
-                return ResourceManager.GetString("GroupListPage_PageTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   settings に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MainPage_AppBar_MenuItemText_AboutTheApplication {
@@ -340,20 +331,11 @@ namespace AKBMatome.Localization {
         }
         
         /// <summary>
-        ///   group information に類似しているローカライズされた文字列を検索します。
+        ///   group and member に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string MainPage_AppBar_MenuItemText_GroupInformation {
+        public static string MainPage_AppBar_MenuItemText_GroupAndChannelInformation {
             get {
-                return ResourceManager.GetString("MainPage_AppBar_MenuItemText_GroupInformation", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   member information に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string MainPage_AppBar_MenuItemText_MemberInformation {
-            get {
-                return ResourceManager.GetString("MainPage_AppBar_MenuItemText_MemberInformation", resourceCulture);
+                return ResourceManager.GetString("MainPage_AppBar_MenuItemText_GroupAndChannelInformation", resourceCulture);
             }
         }
         
@@ -431,7 +413,7 @@ namespace AKBMatome.Localization {
         
         /// <summary>
         ///   Register your prefered group and oshimems now!
-        ///Open &apos;group information&apos; and &apos;member information&apos; menu located at right bottom of your screen to configure your prefered group and oshimems.
+        ///Open &apos;group and member&apos; menu located at right bottom of your screen to configure your prefered group and oshimems.
         ///The word &apos;oshimem&apos; means your prefered member! に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MainPage_TipsForNoOshimems {
