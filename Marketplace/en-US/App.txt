@@ -12,6 +12,7 @@ Enabling push notification, you can receive push notification when 'oshimem' pos
 *PUSH NOTIFICATION FUNCTIONALITY IS BETA VERSION. IT MAY NOT WORK CORRECTLY.
 
 Versions
+2.1.0.0: Fixed upgrading issue. Fixed design.
 2.0.0.0: Renewal as '48 NEWS'. Added member of SKE48, HKT48 and NMB48.
 1.6.0.0: Improved push notification functionality.
 1.5.0.0: Added push notification functionality.
@@ -21,4 +22,4 @@ Versions
 1.1.0.0: Improved networking and application speed. New design. Improved browser feature.
 1.0.0.0: First release.
 
-Keywords  : akb48;akb;48;blog;news
+Keywords  : akb;48;news;ske;hkt
