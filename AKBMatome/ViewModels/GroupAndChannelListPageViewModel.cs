@@ -4,25 +4,29 @@ using System.Linq;
 using System.Windows.Input;
 using AKBMatome.Data;
 using AKBMatome.Navigation;
+using AKBMatome.Services;
+using Helpers;
 using Microsoft.Phone.Controls;
 using SimpleMvvmToolkit;
 
 namespace AKBMatome.ViewModels
 {
-    public class GroupDetailPageViewModel : ViewModelBase<GroupDetailPageViewModel>
+    public class GroupAndChannelListPageViewModel : ViewModelBase<GroupAndChannelListPageViewModel>
     {
         #region Initialization and Cleanup
         /******************************
          * Initialization and Cleanup *
          ******************************/
 
-        public GroupDetailPageViewModel() { }
+        public GroupAndChannelListPageViewModel() { }
 
-        public GroupDetailPageViewModel(INavigator navigator, FeedDataContext dataContext)
+        public GroupAndChannelListPageViewModel(PhoneApplicationFrame app, INavigator navigator, Services.IAKBMatomeService service, FeedDataContext dataContext)
         {
+            this.app = app;
             this.navigator = navigator;
+            this.service = service;
             this.dataContext = dataContext;
-            LoadFeedGroup(((FeedGroup)NavigationService.NavigationArgs).Id);
+            InitPivotItems();
         }
 
         #endregion
@@ -41,7 +45,9 @@ namespace AKBMatome.ViewModels
          * Services *
          ************/
 
+        PhoneApplicationFrame app;
         INavigator navigator;
+        IAKBMatomeService service;
         FeedDataContext dataContext;
 
         #endregion
@@ -51,15 +57,27 @@ namespace AKBMatome.ViewModels
          * Properties *
          **************/
 
-        private FeedGroup _TheFeedGroup;
-        public FeedGroup TheFeedGroup
+        private GroupListViewModel _GroupListViewModel = null;
+        public GroupListViewModel GroupListViewModel
         {
-            get { return _TheFeedGroup; }
+            get { return _GroupListViewModel; }
             set
             {
-                if (_TheFeedGroup == value) return;
-                _TheFeedGroup = value;
-                NotifyPropertyChanged(m => TheFeedGroup);
+                if (_GroupListViewModel == value) return;
+                _GroupListViewModel = value;
+                NotifyPropertyChanged(m => GroupListViewModel);
+            }
+        }
+
+        private ChannelListViewModel _ChannelListViewModel = null;
+        public ChannelListViewModel ChannelListViewModel
+        {
+            get { return _ChannelListViewModel; }
+            set
+            {
+                if (_ChannelListViewModel == value) return;
+                _ChannelListViewModel = value;
+                NotifyPropertyChanged(m => ChannelListViewModel);
             }
         }
 
@@ -76,33 +94,7 @@ namespace AKBMatome.ViewModels
             {
                 return new DelegateCommand(() =>
                 {
-                    RejectChanges();
-                }
-                );
-            }
-        }
-
-        public ICommand OkCommand
-        {
-            get
-            {
-                return new DelegateCommand(() =>
-                {
-                    SubmitChanges();
-                    NavigationService.GoBack();
-                }
-                );
-            }
-        }
-
-        public ICommand CancelCommand
-        {
-            get
-            {
-                return new DelegateCommand(() =>
-                {
-                    RejectChanges();
-                    NavigationService.GoBack();
+                    SendMessage(Constants.MessageTokens.ReloadRequested, new NotificationEventArgs());
                 }
                 );
             }
@@ -115,26 +107,21 @@ namespace AKBMatome.ViewModels
          * Methods *
          ***********/
 
-        private void LoadFeedGroup(int id)
+        private void InitPivotItems()
         {
-            lock (dataContext)
-            {
-                TheFeedGroup = dataContext.FeedGroups.Single(group => group.Id == id);
-            };
-        }
+            GroupListViewModel =
+                new GroupListViewModel
+                (
+                    app, navigator, service, dataContext
+                );
+            GroupListViewModel.ErrorNotice += OnErrorNotice;
 
-        private void SubmitChanges()
-        {
-            dataContext.SubmitChanges();
-            SendMessage(Constants.MessageTokens.FeedGroupsUpdated, new NotificationEventArgs());
-            SendMessage(Constants.MessageTokens.NotificationUpdated, new NotificationEventArgs());
-        }
-
-        private void RejectChanges()
-        {
-            dataContext.Refresh(System.Data.Linq.RefreshMode.OverwriteCurrentValues, TheFeedGroup);
-            SendMessage(Constants.MessageTokens.FeedGroupsUpdated, new NotificationEventArgs());
-            SendMessage(Constants.MessageTokens.NotificationUpdated, new NotificationEventArgs());
+            ChannelListViewModel =
+                new ChannelListViewModel
+                (
+                    app, navigator, service, dataContext
+                );
+            ChannelListViewModel.ErrorNotice += OnErrorNotice;
         }
 
         #endregion
@@ -154,6 +141,12 @@ namespace AKBMatome.ViewModels
         private void NotifyError(string message, Exception error)
         {
             Notify(ErrorNotice, new NotificationEventArgs<Exception>(message, error));
+        }
+
+
+        private void OnErrorNotice(object sender, NotificationEventArgs<Exception> e)
+        {
+            Notify(ErrorNotice, e);
         }
 
         #endregion

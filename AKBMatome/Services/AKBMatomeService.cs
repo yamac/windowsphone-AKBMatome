@@ -46,14 +46,8 @@ namespace AKBMatome.Services
         {
         }
 
-        public void GetAllFeedGroupsAndChannels(FeedDataContext dataContext, Action<Exception> callback, bool update)
+        public void GetAllFeedGroupsAndChannels(FeedDataContext dataContext, Action<Exception> callback)
         {
-            if (!update && (dataContext.FeedGroups.Count() > 0 && dataContext.FeedChannels.Count() > 0))
-            {
-                callback(null);
-                return;
-            }
-
             System.Diagnostics.Debug.WriteLine("GetAllFeedGroupsAndChannels:" + API.FeedGroups);
             var groupsReq = WebRequest.CreateHttp(API.FeedGroups);
             groupsReq.UserAgent = Constants.Net.UserAgent;
@@ -174,85 +168,6 @@ namespace AKBMatome.Services
                 );
             
             groupsObs.SelectMany(a => channelsObs)
-            .Subscribe(
-                _ =>
-                {
-                    // サブミット
-                    callback(null);
-                }
-                ,
-                e =>
-                {
-                    callback(e);
-                }
-            );
-        }
-
-        public void GetAllFeedGroups(FeedDataContext dataContext, Action<Exception> callback, bool update)
-        {
-            if (!update && (dataContext.FeedGroups.Count() > 0))
-            {
-                callback(null);
-                return;
-            }
-
-            System.Diagnostics.Debug.WriteLine("GetAllFeedGroups:" + API.FeedGroups);
-            var groupsReq = WebRequest.CreateHttp(API.FeedGroups);
-            groupsReq.UserAgent = Constants.Net.UserAgent;
-            groupsReq.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
-
-            var groupsObs =
-                Observable
-                .FromAsyncPattern<WebResponse>(groupsReq.BeginGetResponse, groupsReq.EndGetResponse)()
-                .Select
-                (
-                    res =>
-                    {
-                        // ストリームを取得
-                        Stream stream = res.GetResponseStream();
-                        if (string.Equals("gzip", res.Headers[HttpRequestHeader.ContentEncoding], StringComparison.OrdinalIgnoreCase))
-                        {
-                            stream = new GZipInputStream(stream);
-                        }
-
-                        // シリアライズ
-                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FeedGroup[]));
-                        var groups = (FeedGroup[])serializer.ReadObject(stream);
-
-                        // データ更新
-                        lock (dataContext)
-                        {
-                            var existsGroupIds = (from theGroup in groups select theGroup.Id).Intersect(from theGroup in dataContext.FeedGroups select theGroup.Id);
-                            var existsGroups = from theGroup in groups from existsGroupId in existsGroupIds where theGroup.Id == existsGroupId select theGroup;
-                            foreach (var existsGroup in existsGroups)
-                            {
-                                System.Diagnostics.Debug.WriteLine("既存グループ:" + existsGroup.Id + "," + existsGroup.Title);
-                                var oldGroup = dataContext.FeedGroups.Single(theGroup => theGroup.Id == existsGroup.Id);
-                                oldGroup.Title = existsGroup.Title;
-                                oldGroup.Class = existsGroup.Class;
-                                oldGroup.AccentColor = existsGroup.AccentColor;
-                                oldGroup.Status = existsGroup.Status;
-                            }
-
-                            var newGroupIds = (from theGroup in groups select theGroup.Id).Except(from theGroup in dataContext.FeedGroups select theGroup.Id);
-                            var newGroups = from theGroup in groups from newGroupId in newGroupIds where theGroup.Id == newGroupId select theGroup;
-                            foreach (var newGroup in newGroups)
-                            {
-                                System.Diagnostics.Debug.WriteLine("新規グループ:" + newGroup.Id + "," + newGroup.Title);
-                                newGroup.Subscribe = 100;
-                                dataContext.FeedGroups.InsertOnSubmit(newGroup);
-                            }
-                            dataContext.SubmitChanges();
-                        };
-
-                        // ストリームを閉じる
-                        stream.Close();
-
-                        return 1;
-                    }
-                );
-
-            groupsObs
             .Subscribe(
                 _ =>
                 {

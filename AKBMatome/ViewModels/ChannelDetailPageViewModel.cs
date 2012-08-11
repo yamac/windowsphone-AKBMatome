@@ -9,7 +9,7 @@ using SimpleMvvmToolkit;
 
 namespace AKBMatome.ViewModels
 {
-    public class ChannelDetailPageViewModel : ViewModelBase<ChannelListPageViewModel>
+    public class ChannelDetailPageViewModel : ViewModelBase<ChannelListViewModel>
     {
         #region Initialization and Cleanup
         /******************************

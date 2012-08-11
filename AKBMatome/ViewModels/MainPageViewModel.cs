@@ -23,25 +23,38 @@ namespace AKBMatome.ViewModels
 
         public MainPageViewModel(PhoneApplicationFrame app, INavigator navigator, Services.IAKBMatomeService service, FeedDataContext dataContext)
         {
-            RegisterToReceiveMessages(Constants.MessageTokens.InitializeCompleted, OnInitializeCompleted);
-            RegisterToReceiveMessages(Constants.MessageTokens.FeedGroupsUpdated, OnFeedGroupsOrChannelsUpdated);
-            RegisterToReceiveMessages(Constants.MessageTokens.FeedChannelsUpdated, OnFeedGroupsOrChannelsUpdated);
+            RegisterToReceiveMessages(Constants.MessageTokens.MainPageInitializeCompleted, OnInitializeCompleted);
+            RegisterToReceiveMessages(Constants.MessageTokens.ReloadRequested, OnReloadRequested);
             RegisterToReceiveMessages(Constants.MessageTokens.NotificationUpdated, OnNotificationUpdated);
             this.app = app;
             this.navigator = navigator;
             this.service = service;
             this.dataContext = dataContext;
             IsInitializing = true;
+
             if (!IsInDesignMode)
             {
+                bool updated = false;
+                float? version = Helpers.AppSettings.GetValueOrDefault<float?>(Constants.AppKey.Version, null);
+                if (version == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("first boot");
+                }
+                else if (version < Helpers.AppAttributes.VersionAsFloat)
+                {
+                    updated = true;
+                    System.Diagnostics.Debug.WriteLine("version up from " + version + " to " + Helpers.AppAttributes.VersionAsFloat);
+                }
+                Helpers.AppSettings.AddOrUpdateValue(Constants.AppKey.Version, Helpers.AppAttributes.VersionAsFloat);
+
                 DateTime lastUpdate = Helpers.AppSettings.GetValueOrDefault<DateTime>(Constants.AppKey.LastUpdate, DateTime.MinValue);
-                if (DateTime.Compare(lastUpdate, DateTime.Now.AddDays(-Constants.App.FeedChannelExpireDays)) < 0)
+                if (updated || DateTime.Compare(lastUpdate, DateTime.Now.AddDays(-Constants.App.FeedChannelExpireDays)) < 0)
                 {
                     LoadAllFeedGroupsAndChannels();
                 }
                 else
                 {
-                    SendMessage(Constants.MessageTokens.InitializeCompleted, new NotificationEventArgs());
+                    SendMessage(Constants.MessageTokens.MainPageInitializeCompleted, new NotificationEventArgs());
                 }
             }
         }
@@ -87,7 +100,7 @@ namespace AKBMatome.ViewModels
             IsInitializing = false;
         }
 
-        private void OnFeedGroupsOrChannelsUpdated(object sender, NotificationEventArgs e)
+        private void OnReloadRequested(object sender, NotificationEventArgs e)
         {
             LoadPivotItem(0, true);
             LoadPivotItem(1, true);
@@ -281,7 +294,7 @@ namespace AKBMatome.ViewModels
         public void LoadAllFeedGroupsAndChannels()
         {
             IsBusy = true;
-            service.GetAllFeedGroupsAndChannels(dataContext, GetAllFeedGroupsAndChannelsCompleted, false);
+            service.GetAllFeedGroupsAndChannels(dataContext, GetAllFeedGroupsAndChannelsCompleted);
         }
 
         private void InitPivotItems()
@@ -390,12 +403,13 @@ namespace AKBMatome.ViewModels
 
             if (error != null)
             {
-                NotifyError(
-                    Localization.AppResources.MainPage_Error_FailedToGetAllFeedGroupsAndChannels, error);
+                NotifyError(Localization.AppResources.MainPage_Error_FailedToGetAllFeedGroupsAndChannels, error);
                 return;
             }
 
-            SendMessage(Constants.MessageTokens.InitializeCompleted, new NotificationEventArgs());
+            Helpers.AppSettings.AddOrUpdateValue(Constants.AppKey.LastUpdate, DateTime.Now);
+
+            SendMessage(Constants.MessageTokens.MainPageInitializeCompleted, new NotificationEventArgs());
         }
 
         #endregion

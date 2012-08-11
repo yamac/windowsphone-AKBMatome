@@ -11,23 +11,23 @@ using SimpleMvvmToolkit;
 
 namespace AKBMatome.ViewModels
 {
-    public class ChannelListPageViewModel : ViewModelBase<ChannelListPageViewModel>
+    public class ChannelListViewModel : ViewModelBase<ChannelListViewModel>
     {
         #region Initialization and Cleanup
         /******************************
          * Initialization and Cleanup *
          ******************************/
 
-        public ChannelListPageViewModel() { }
+        public ChannelListViewModel() { }
 
-        public ChannelListPageViewModel(PhoneApplicationFrame app, INavigator navigator, Services.IAKBMatomeService service, FeedDataContext dataContext)
+        public ChannelListViewModel(PhoneApplicationFrame app, INavigator navigator, Services.IAKBMatomeService service, FeedDataContext dataContext)
         {
-            RegisterToReceiveMessages(Constants.MessageTokens.ChannelListInitializeCompleted, OnInitializeCompleted);
+            RegisterToReceiveMessages(Constants.MessageTokens.FeedGroupsUpdated, OnFeedGroupsUpdated);
             this.app = app;
             this.navigator = navigator;
             this.service = service;
             this.dataContext = dataContext;
-            LoadAllFeedGroupsAndChannels();
+            LoadFeedChannels();
         }
 
         #endregion
@@ -39,7 +39,7 @@ namespace AKBMatome.ViewModels
 
         public event EventHandler<NotificationEventArgs<Exception>> ErrorNotice;
 
-        private void OnInitializeCompleted(object sender, NotificationEventArgs e)
+        private void OnFeedGroupsUpdated(object sender, NotificationEventArgs e)
         {
             LoadFeedChannels();
         }
@@ -62,18 +62,6 @@ namespace AKBMatome.ViewModels
         /**************
          * Properties *
          **************/
-
-        private bool _IsBusy = false;
-        public bool IsBusy
-        {
-            get { return _IsBusy; }
-            set
-            {
-                if (_IsBusy == value) return;
-                _IsBusy = value;
-                NotifyPropertyChanged(m => IsBusy);
-            }
-        }
 
         private ObservableCollection<PublicGrouping<FeedGroup, FeedChannel>> _FeedChannels;
         public ObservableCollection<PublicGrouping<FeedGroup, FeedChannel>> FeedChannels
@@ -117,12 +105,6 @@ namespace AKBMatome.ViewModels
          * Methods *
          ***********/
 
-        private void LoadAllFeedGroupsAndChannels()
-        {
-            IsBusy = true;
-            service.GetAllFeedGroupsAndChannels(dataContext, GetAllFeedGroupsAndChannelsCompleted, true);
-        }
-
         private void LoadFeedChannels()
         {
             lock (dataContext)
@@ -143,24 +125,6 @@ namespace AKBMatome.ViewModels
         /************************
          * Completion Callbacks *
          ************************/
-
-        private void GetAllFeedGroupsAndChannelsCompleted(Exception error)
-        {
-            if (!IsBusy)
-            {
-                return;
-            }
-
-            IsBusy = false;
-
-            if (error != null)
-            {
-                NotifyError(Localization.AppResources.MainPage_Error_FailedToGetAllFeedGroupsAndChannels, error);
-                return;
-            }
-
-            SendMessage(Constants.MessageTokens.ChannelListInitializeCompleted, new NotificationEventArgs());
-        }
 
         #endregion
 
