@@ -71,11 +71,11 @@ namespace AKBMatome.Locators
             }
         }
 
-        public GroupListPageViewModel GroupListPageViewModel
+        public GroupAndChannelListPageViewModel GroupAndChannelListPageViewModel
         {
             get
             {
-                return new GroupListPageViewModel(TheApp, TheNavigator, TheAKBMatomeService, TheFeedDataContext);
+                return new GroupAndChannelListPageViewModel(TheApp, TheNavigator, TheAKBMatomeService, TheFeedDataContext);
             }
         }
 
@@ -84,14 +84,6 @@ namespace AKBMatome.Locators
             get
             {
                 return new GroupDetailPageViewModel(TheNavigator, TheFeedDataContext);
-            }
-        }
-
-        public ChannelListPageViewModel ChannelListPageViewModel
-        {
-            get
-            {
-                return new ChannelListPageViewModel(TheApp, TheNavigator, TheAKBMatomeService, TheFeedDataContext);
             }
         }
 

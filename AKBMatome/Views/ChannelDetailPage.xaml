@@ -185,17 +185,20 @@
                 <Grid Margin="{StaticResource PhoneMargin}">
                     <StackPanel>
                         <TextBlock
-                            Style="{StaticResource PhoneTextLargeStyle}"
-                            FontSize="{StaticResource PhoneFontSizeMedium}"
+                            Style="{StaticResource PhoneTextSubtleStyle}"
+                            Margin="{StaticResource PhoneHorizontalMargin}"
                             Text="{Binding Path=Resources.ChannelDetailPage_OfficialBlog, Source={StaticResource LocalizedResources}}"
                             />
-                        <Grid Margin="{StaticResource PhoneMargin}">
+                        <Grid>
                             <HyperlinkButton
                                 NavigateUri="{Binding TheFeedChannel.Link}"
                                 TargetName="_self"
-                                Style="{StaticResource HyperlinkEmptyStyle}">
+                                Style="{StaticResource HyperlinkEmptyStyle}"
+                                Margin="0"
+                                >
                                 <localControls:HeaderedContentControl
                                     Style="{StaticResource SinglelineHyperlinkStyle}"
+                                    Margin="0"
                                     Content="{Binding TheFeedChannel.Link}"
                                     />
                             </HyperlinkButton>

@@ -7,16 +7,16 @@ using Microsoft.Phone.Controls;
 
 namespace AKBMatome.Views
 {
-    public partial class ChannelListPage : PhoneApplicationPage
+    public partial class GroupAndChannelListPage : PhoneApplicationPage
     {
         private LongListSelector currentSelector;
 
-        public ChannelListPage()
+        public GroupAndChannelListPage()
         {
             InitializeComponent();
         }
 
-        private void TheListSelector_GroupViewOpened(object sender, GroupViewOpenedEventArgs e)
+        private void ChannelList_GroupViewOpened(object sender, GroupViewOpenedEventArgs e)
         {
             //Hold a reference to the active long list selector.
             currentSelector = sender as LongListSelector;
@@ -60,7 +60,7 @@ namespace AKBMatome.Views
             _swivelShow.Begin();
         }
 
-        private void TheListSelector_GroupViewClosing(object sender, GroupViewClosingEventArgs e)
+        private void ChannelList_GroupViewClosing(object sender, GroupViewClosingEventArgs e)
         {
             //Cancelling automatic closing and scrolling to do it manually.
             e.Cancel = true;
@@ -108,13 +108,13 @@ namespace AKBMatome.Views
                     }
                 }
 
-                _swivelHide.Completed += TheListSelector_GroupViewClosing_Completed;
+                _swivelHide.Completed += ChannelList_GroupViewClosing_Completed;
                 _swivelHide.Begin();
 
             });
         }
 
-        private void TheListSelector_GroupViewClosing_Completed(object sender, EventArgs e)
+        private void ChannelList_GroupViewClosing_Completed(object sender, EventArgs e)
         {
             //Close group view.
             if (currentSelector != null)

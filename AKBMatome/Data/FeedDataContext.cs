@@ -16,7 +16,6 @@ namespace AKBMatome.Data
                 System.Diagnostics.Debug.WriteLine("Create database");
                 CreateDatabase();
                 DatabaseSchemaUpdater updater = this.CreateDatabaseSchemaUpdater();
-                int version = updater.DatabaseSchemaVersion;
                 updater.DatabaseSchemaVersion = DBSchemaVersion;
                 updater.Execute();
             }
@@ -26,7 +25,7 @@ namespace AKBMatome.Data
                 int version = updater.DatabaseSchemaVersion;
                 if (version == 0)
                 {
-                    System.Diagnostics.Debug.WriteLine("Update database from " + version);
+                    System.Diagnostics.Debug.WriteLine("Update database from " + version + " to " + DBSchemaVersion);
                     updater.AddColumn<FeedGroup>("Class");
                     updater.AddColumn<FeedGroup>("AccentColor");
                     updater.AddColumn<FeedGroup>("Status");
@@ -34,6 +33,9 @@ namespace AKBMatome.Data
                     updater.AddColumn<FeedChannel>("Status");
                     updater.DatabaseSchemaVersion = DBSchemaVersion;
                     updater.Execute();
+                    float oldVersion = 1.06f;
+                    Helpers.AppSettings.AddOrUpdateValue(Constants.AppKey.Version, oldVersion); // for compatibility
+
                 }
                 else
                 {

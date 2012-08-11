@@ -113,7 +113,6 @@
                 </DataTemplate>
             </controls:Pivot.HeaderTemplate>
 
-
             <!-- ピボット:推しメン -->
             <controls:PivotItem
                 Header="{Binding}"
@@ -191,13 +190,13 @@
                                         <TextBlock
                                             Text="{Binding Path=Resources.Common_Loading, Source={StaticResource LocalizedResources}}"
                                             Style="{StaticResource PhoneTextSubtleStyle}"
-                                            Foreground="#FF3399"
+                                            Foreground="#FF57BA"
                                             />
 
                                         <!-- ローディングインジケーター -->
                                         <toolkit:PerformanceProgressBar
                                             Grid.Row="0"
-                                            Foreground="#FF3399"
+                                            Foreground="#FF57BA"
                                             Height="4"
                                             VerticalAlignment="Top"
                                             IsIndeterminate="True"
@@ -280,13 +279,13 @@
                                         <TextBlock
                                             Text="{Binding Path=Resources.Common_Loading, Source={StaticResource LocalizedResources}}"
                                             Style="{StaticResource PhoneTextSubtleStyle}"
-                                            Foreground="#FF3399"
+                                            Foreground="#FF57BA"
                                             />
 
                                         <!-- ローディングインジケーター -->
                                         <toolkit:PerformanceProgressBar
                                             Grid.Row="0"
-                                            Foreground="#FF3399"
+                                            Foreground="#FF57BA"
                                             Height="4"
                                             VerticalAlignment="Top"
                                             IsIndeterminate="True"
@@ -344,13 +343,13 @@
                                     <TextBlock
                                         Text="{Binding Path=Resources.Common_Loading, Source={StaticResource LocalizedResources}}"
                                         Style="{StaticResource PhoneTextSubtleStyle}"
-                                        Foreground="#FF3399"
+                                        Foreground="#FF57BA"
                                         />
 
                                     <!-- ローディングインジケーター -->
                                     <toolkit:PerformanceProgressBar
                                         Grid.Row="0"
-                                        Foreground="#FF3399"
+                                        Foreground="#FF57BA"
                                         Height="4"
                                         VerticalAlignment="Top"
                                         IsIndeterminate="True"
@@ -375,17 +374,10 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </helpers:BindableApplicationBarMenuItem>
-            <helpers:BindableApplicationBarMenuItem Text="{Binding Path=Resources.MainPage_AppBar_MenuItemText_GroupInformation, Source={StaticResource LocalizedResources}}">
+            <helpers:BindableApplicationBarMenuItem Text="{Binding Path=Resources.MainPage_AppBar_MenuItemText_GroupAndChannelInformation, Source={StaticResource LocalizedResources}}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
-                        <ic:NavigateToPageAction TargetPage="/Views/GroupListPage.xaml"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </helpers:BindableApplicationBarMenuItem>
-            <helpers:BindableApplicationBarMenuItem Text="{Binding Path=Resources.MainPage_AppBar_MenuItemText_MemberInformation, Source={StaticResource LocalizedResources}}">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <ic:NavigateToPageAction TargetPage="/Views/ChannelListPage.xaml"/>
+                        <ic:NavigateToPageAction TargetPage="/Views/GroupAndChannelListPage.xaml"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </helpers:BindableApplicationBarMenuItem>
